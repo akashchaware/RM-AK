@@ -1,0 +1,2095 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RepairingMaster · Clean + Estimate</title>
+  <style>
+    /* ─── reset & base ─── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --border: #e9edf2;
+      --text: #1a1f2e;
+      --muted: #6b7a8f;
+      --accent: #0f8b8d;
+      --accent-light: #e1f0f0;
+      --accent-dark: #0a6b6d;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 4px rgba(0,0,0,0.02);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+    input, select, textarea {
+      font: inherit;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: var(--surface);
+      color: var(--text);
+      width: 100%;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15,139,141,0.12);
+    }
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--text);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.35s ease;
+      pointer-events: none;
+      z-index: 999;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    }
+    .toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── login screen ─── */
+    .login-screen {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      min-height: 100vh;
+      background: var(--surface);
+    }
+    .login-left {
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .login-left .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .login-left .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: var(--accent-light);
+    }
+    .login-left .brand strong { font-size: 18px; }
+    .login-left .brand span { font-size: 13px; color: var(--muted); display: block; margin-top: -2px; }
+    .login-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+    .login-tabs button {
+      flex:1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .login-tabs button.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .login-helper {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 12px 0 20px;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .login-form .primary-action {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    .login-form .primary-action:hover { background: var(--accent-dark); }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 14px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex:1;
+      height: 1px;
+      background: var(--border);
+    }
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s, border 0.2s;
+    }
+    .google-btn:hover { background: var(--bg); border-color: #ccc; }
+    .test-login-row {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .test-login-row .eyebrow { width:100%; margin-bottom:2px; }
+    .test-login-btn {
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+      background: var(--surface);
+      color: var(--muted);
+    }
+    .test-login-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+    .apply-links {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .role-pills {
+      display: flex;
+      gap: 6px;
+      margin: 6px 0 12px;
+      flex-wrap: wrap;
+    }
+    .role-pill {
+      padding: 4px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+      background: var(--surface);
+      color: var(--muted);
+    }
+    .role-pill.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+    .app-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .app-form .primary-action {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .login-right {
+      background: var(--bg);
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+    .showcase-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+    }
+    .showcase-card:hover { transform: translateY(-2px); }
+    .showcase-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--bg);
+      margin-bottom: 10px;
+    }
+    .showcase-card h3 { font-size: 15px; margin-bottom: 4px; }
+    .showcase-card p { font-size: 13px; color: var(--muted); }
+    .hot-deals-section .section-title { margin-bottom: 12px; }
+    .hot-deals-section .section-title h2 { font-size: 18px; }
+    .hot-deals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    .deal-item {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .deal-item div strong { font-size: 14px; display: block; }
+    .deal-item div span { font-size: 12px; color: var(--muted); }
+    .deal-item .price { font-weight: 700; color: var(--accent); font-size: 15px; }
+
+    /* ─── app shell ─── */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+    .sidebar {
+      width: 220px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top:0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: var(--accent-light);
+    }
+    .sidebar .brand strong { font-size: 15px; }
+    .sidebar .brand span { font-size: 11px; color: var(--muted); display: block; margin-top: -2px; }
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      margin: 12px 14px 8px;
+      background: var(--bg);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .user-badge:hover { background: #eef1f4; }
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .user-info strong { font-size: 14px; display: block; }
+    .user-info span { font-size: 11px; color: var(--muted); background: var(--border); padding: 0 8px; border-radius: 10px; }
+    .sidebar-section {
+      flex:1;
+      padding: 0 14px;
+      margin-top: 8px;
+    }
+    .sidebar-panel {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 6px;
+    }
+    .sidebar-panel .panel-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .sidebar-panel strong { font-size: 15px; display: block; margin-top: 2px; }
+    .sidebar-panel p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .sidebar-footer {
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+    }
+    .sidebar-logout {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: #c0392b;
+      transition: all 0.15s;
+      background: var(--surface);
+    }
+    .sidebar-logout:hover { background: #fef0ef; border-color: #e74c3c; }
+
+    /* ─── main content ─── */
+    .content {
+      flex:1;
+      padding: 24px 32px 40px;
+      overflow-y: auto;
+      min-width: 0;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .topbar h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-top: 2px;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .secondary-action {
+      padding: 6px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s;
+      background: var(--surface);
+    }
+    .secondary-action:hover { background: var(--bg); border-color: #ccc; }
+    .notif-bell {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s;
+    }
+    .notif-bell:hover { background: var(--bg); }
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #e74c3c;
+      color: #fff;
+      font-size: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    .status-strip .label { font-size: 11px; color: var(--muted); display: block; }
+    .status-strip strong { font-size: 14px; }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .metric-grid article {
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .metric-grid article span { font-size: 12px; color: var(--muted); font-weight: 500; display: block; }
+    .metric-grid article strong { font-size: 26px; font-weight: 700; display: block; margin-top: 2px; }
+
+    .segmented {
+      display: inline-flex;
+      gap: 2px;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 8px;
+    }
+    .segmented button {
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .segmented button.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .request-list {
+      display: grid;
+      gap: 6px;
+    }
+    .request-item {
+      background: var(--surface);
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: border 0.15s, box-shadow 0.15s;
+    }
+    .request-item:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+    .request-item .left { min-width:0; }
+    .request-item .left strong { font-size: 14px; display: block; }
+    .request-item .left span { font-size: 12px; color: var(--muted); }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 20px;
+      background: var(--bg);
+      color: var(--muted);
+      flex-shrink:0;
+      margin-left:8px;
+    }
+    .status-pill.new { background: #dbeafe; color: #2563eb; }
+    .status-pill.active { background: #fef3c7; color: #b45309; }
+    .status-pill.repair { background: #ede9fe; color: #7c3aed; }
+    .status-pill.delivery { background: #d1fae5; color: #065f46; }
+    .status-pill.closed { background: #f1f5f9; color: #475569; }
+    .status-pill.pickup { background: #fef3c7; color: #b45309; }
+
+    .request-form {
+      background: var(--surface);
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .request-form .section-title h2 { font-size: 18px; }
+    .primary-action {
+      background: var(--accent);
+      color: #fff;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+      border: none;
+    }
+    .primary-action:hover { background: var(--accent-dark); }
+    .primary-action.full { width: 100%; }
+
+    .customer-panel {
+      background: var(--surface);
+      padding: 20px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .device-hero {
+      display: flex;
+      gap:16px;
+      align-items: center;
+      margin-bottom:12px;
+    }
+    .device-hero .icon {
+      width:60px; height:60px;
+      border-radius:10px;
+      background:var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      flex-shrink:0;
+    }
+    .tag-row {
+      display: flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .tag-row span {
+      font-size:11px;
+      background:var(--bg);
+      padding:0 10px;
+      border-radius:12px;
+      color:var(--muted);
+    }
+    .quote-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding:12px 16px;
+      background:var(--bg);
+      border-radius:8px;
+      margin-top:12px;
+    }
+    .quote-box h3 { font-size:14px; }
+    .quote-box strong { font-size:20px; color:var(--accent); }
+    .quote-box button { background:var(--accent); color:#fff; padding:6px 18px; border-radius:8px; font-weight:600; font-size:13px; }
+
+    /* ─── estimate panel ─── */
+    .estimate-panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin-top: 14px;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+    .estimate-panel .estimate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .estimate-panel .estimate-header h3 { font-size: 16px; }
+    .estimate-panel .estimate-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    .estimate-panel .estimate-breakdown .part-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .estimate-panel .estimate-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 18px;
+      padding-top: 8px;
+      border-top: 2px solid var(--border);
+      margin-top: 4px;
+    }
+    .estimate-panel .estimate-total .total-amount { color: var(--accent); }
+    .estimate-panel .estimate-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .estimate-panel .calculate-btn {
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .estimate-panel .calculate-btn:hover { background: var(--accent-dark); }
+    .estimate-panel .no-estimate {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 8px 0;
+    }
+
+    /* ─── coordinator, etc ─── */
+    .coord-dashboard-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .coord-left-panel, .coord-right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .coord-grouped-list {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 4px 0;
+      max-height: 460px;
+      overflow-y: auto;
+    }
+    .coord-grouped-list .request-item {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 10px 16px;
+    }
+    .coord-grouped-list .request-item:last-child { border-bottom: none; }
+    .pending-scroll {
+      max-height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pending-item {
+      background: var(--bg);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pending-item .badge { font-size: 10px; background:#e74c3c; color:#fff; padding:0 8px; border-radius:10px; }
+    .detail-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      flex:1;
+    }
+    .detail-scroll {
+      max-height: 300px;
+      overflow-y: auto;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap:4px;
+      margin-top:8px;
+    }
+    .checklist label {
+      font-size:13px;
+      font-weight:400;
+      color:var(--text);
+      flex-direction:row;
+      align-items:center;
+      gap:8px;
+    }
+    .checklist input[type="checkbox"] { width:16px; height:16px; accent-color:var(--accent); }
+
+    .partner-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+    .diagnosis-card, .inventory-card, .market-upload-card, .custom-back-card {
+      background: var(--surface);
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .diagnosis-card textarea {
+      height:80px;
+      resize:vertical;
+      margin:6px 0 10px;
+    }
+    .parts-grid {
+      display:grid;
+      gap:4px;
+      margin-bottom:8px;
+    }
+    .parts-controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      align-items:center;
+    }
+    .parts-controls input {
+      width:auto;
+      flex:1;
+      min-width:60px;
+      padding:6px 10px;
+      font-size:12px;
+    }
+    .parts-controls button {
+      background:var(--accent);
+      color:#fff;
+      padding:6px 14px;
+      border-radius:6px;
+      font-weight:600;
+      font-size:12px;
+    }
+    .commission-preview {
+      display:flex;
+      justify-content:space-between;
+      padding:8px 0;
+      border-top:1px solid var(--border);
+      margin-top:8px;
+      font-size:13px;
+    }
+    .commission-preview strong { color:var(--accent); font-size:16px; }
+
+    .admin-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+    .chart-panel, .vendor-panel {
+      background: var(--surface);
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 100px;
+      padding-top: 12px;
+    }
+    .bar-chart .bar {
+      flex:1;
+      background: var(--accent);
+      border-radius: 4px 4px 0 0;
+      min-height: 8px;
+      transition: height 0.3s;
+    }
+    .bar-chart .bar-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+    .vendor-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .vendor-item:last-child { border-bottom: none; }
+
+    .market-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .market-header h2 { font-size: 22px; }
+    .market-subtitle { font-size: 13px; color: var(--muted); }
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+      gap:16px;
+    }
+    .market-item {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s;
+    }
+    .market-item:hover { transform: translateY(-2px); }
+    .market-item img {
+      width:100%;
+      height:120px;
+      object-fit:cover;
+      border-radius:8px;
+      background:var(--bg);
+      margin-bottom:8px;
+    }
+    .market-item h4 { font-size:14px; }
+    .market-item .price { font-weight:700; color:var(--accent); font-size:16px; }
+    .market-item .meta { font-size:12px; color:var(--muted); }
+
+    .notif-panel {
+      width:0;
+      overflow:hidden;
+      background:var(--surface);
+      border-left:1px solid var(--border);
+      transition:width 0.3s ease;
+      display:flex;
+      flex-direction:column;
+      flex-shrink:0;
+    }
+    .notif-panel.open { width:300px; }
+    .notif-panel-header {
+      display:flex;
+      justify-content:space-between;
+      padding:16px 18px 10px;
+      border-bottom:1px solid var(--border);
+    }
+    .notif-panel-header span { font-weight:700; font-size:14px; }
+    .notif-panel-header button { font-size:12px; color:var(--accent); }
+    .notif-list {
+      flex:1;
+      overflow-y:auto;
+      padding:8px 12px;
+    }
+    .notif-item {
+      padding:8px 10px;
+      border-radius:8px;
+      font-size:13px;
+      margin-bottom:4px;
+      background:var(--bg);
+    }
+    .notif-item.unread { background:var(--accent-light); border-left:3px solid var(--accent); }
+
+    .detail-topbar {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+    .detail-topbar button {
+      background:var(--accent);
+      color:#fff;
+      padding:6px 16px;
+      border-radius:8px;
+      font-weight:600;
+      font-size:13px;
+    }
+
+    @media (max-width:1024px) {
+      .login-screen { grid-template-columns:1fr; }
+      .login-right { display:none; }
+      .sidebar { width:64px; padding:12px 0; }
+      .sidebar .brand strong, .sidebar .brand span, .sidebar .user-info,
+      .sidebar .sidebar-panel .panel-label, .sidebar .sidebar-panel strong,
+      .sidebar .sidebar-panel p, .sidebar .sidebar-footer .sidebar-logout { display:none; }
+      .sidebar .brand { justify-content:center; padding:0 0 12px; border-bottom:none; }
+      .sidebar .brand img { width:32px; height:32px; }
+      .user-badge { justify-content:center; padding:8px; margin:4px 8px; }
+      .user-avatar { width:32px; height:32px; font-size:12px; }
+      .sidebar-section { padding:0 6px; }
+      .sidebar-panel { padding:8px; text-align:center; }
+      .sidebar-panel strong { font-size:12px; }
+      .sidebar-footer { padding:6px; }
+      .sidebar-logout { font-size:10px; padding:4px; }
+      .content { padding:16px; }
+      .metric-grid { grid-template-columns:repeat(2,1fr); }
+      .coord-dashboard-layout { grid-template-columns:1fr; }
+      .partner-layout { grid-template-columns:1fr; }
+      .admin-grid { grid-template-columns:1fr; }
+      .showcase-grid, .hot-deals-grid { grid-template-columns:1fr; }
+      .market-grid { grid-template-columns:1fr 1fr; }
+      .notif-panel.open { width:260px; }
+    }
+    @media (max-width:600px) {
+      .login-left { padding:24px 20px; }
+      .market-grid { grid-template-columns:1fr; }
+      .metric-grid { grid-template-columns:1fr 1fr; }
+      .topbar { flex-direction:column; gap:8px; }
+      .top-actions { width:100%; justify-content:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── TOAST ─── -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ─── LOGIN SCREEN ─── -->
+  <section class="login-screen" id="loginScreen">
+    <div class="login-left">
+      <div class="brand">
+        <img src="image/logo.png" alt="RepairingMaster" onerror="this.style.display='none'">
+        <div>
+          <strong>RepairingMaster</strong>
+          <span>India electronics service</span>
+        </div>
+      </div>
+
+      <div class="login-tabs" id="loginTabs">
+        <button class="active" data-tab="signin">Sign In</button>
+        <button data-tab="signup">Sign Up</button>
+        <button data-tab="employee">Employee</button>
+      </div>
+
+      <p class="login-helper" id="loginHelper">Welcome back — sign in to continue</p>
+
+      <form class="login-form" id="unifiedLoginForm" autocomplete="off">
+        <label>Email <input id="loginEmail" type="email" placeholder="your@email.com" autocomplete="email"></label>
+        <div id="nameField" style="display:none">
+          <label>Full name <input id="loginName" placeholder="Your full name" autocomplete="name"></label>
+        </div>
+        <div id="cityField" style="display:none">
+          <label>City <input id="loginCity" placeholder="e.g. Mumbai, Bengaluru" autocomplete="off"></label>
+        </div>
+        <label>Password <input id="loginPassword" type="password" placeholder="Password" autocomplete="off"></label>
+        <button class="primary-action full" type="submit" id="loginSubmitBtn">Sign In</button>
+      </form>
+
+      <div class="divider"><span>or</span></div>
+      <button class="google-btn" onclick="handleGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/></svg>
+        Sign in with Google
+      </button>
+
+      <div class="test-login-row">
+        <span class="eyebrow">Quick test accounts</span>
+        <button class="test-login-btn" onclick="handleTestLogin('customer')">Customer</button>
+        <button class="test-login-btn" onclick="handleTestLogin('coordinator')">Coordinator</button>
+        <button class="test-login-btn" onclick="handleTestLogin('technician')">Technician</button>
+        <button class="test-login-btn" onclick="handleTestLogin('repairmaster')">RepairMaster</button>
+        <button class="test-login-btn" onclick="handleTestLogin('admin')">Admin</button>
+      </div>
+
+      <div class="apply-links" id="applyLinks">
+        <span class="eyebrow">Apply for a role</span>
+        <div class="role-pills" id="rolePills">
+          <button class="role-pill active" data-role="technician">Technician</button>
+          <button class="role-pill" data-role="repairmaster">RepairMaster</button>
+          <button class="role-pill" data-role="coordinator">Coordinator</button>
+        </div>
+        <form class="app-form" id="applicationForm" autocomplete="off">
+          <label>Full name <input id="appName" placeholder="Full name" required></label>
+          <label>Email <input id="appEmail" type="email" placeholder="your@email.com" required></label>
+          <label>Phone <input id="appPhone" placeholder="Phone number" required></label>
+          <label>Location <select id="appLocation">
+              <option>Mumbai West</option>
+              <option>Bengaluru Central</option>
+              <option>Delhi NCR</option>
+              <option>Pune</option>
+              <option>Hyderabad</option>
+              <option>Chennai</option>
+              <option>Kolkata</option>
+              <option>Ahmedabad</option>
+          </select></label>
+          <div id="appDynamicFields"></div>
+          <button class="primary-action full" type="submit">Submit Application</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="showcase-grid">
+        <div class="showcase-card">
+          <img src="image/technician-device-1.png" alt="Doorstep pickup" loading="lazy">
+          <h3>Doorstep Pickup</h3>
+          <p>Free pickup from your home with OTP‑secured handover.</p>
+        </div>
+        <div class="showcase-card">
+          <img src="image/workshop.png" alt="Expert repair" loading="lazy">
+          <h3>Expert Repair &amp; Drop</h3>
+          <p>Certified repairs at our labs, delivered back to your door.</p>
+        </div>
+        <div class="showcase-card">
+          <img src="image/technician-scooty.png" alt="Refurbished" loading="lazy">
+          <h3>Certified Refurbished</h3>
+          <p>Grade‑tested devices with warranty and 72‑point quality check.</p>
+        </div>
+      </div>
+
+      <div class="hot-deals-section">
+        <div class="section-title">
+          <span class="eyebrow">Hot deals</span>
+          <h2>Top deals from marketplace</h2>
+        </div>
+        <div class="hot-deals-grid" id="hotDealsGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── APP SHELL ─── -->
+  <div class="app-shell" id="appShell" style="display:none">
+
+    <!-- sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="image/logo.png" alt="" onerror="this.style.display='none'">
+        <div>
+          <strong>RepairingMaster</strong>
+          <span>Service platform</span>
+        </div>
+      </div>
+
+      <div class="user-badge" id="userBadge">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <strong id="userName">User</strong>
+          <span id="userRoleBadge">Role</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-panel">
+          <span class="panel-label">Active Ticket</span>
+          <strong id="activeRequestLabel">—</strong>
+          <p id="activeRequestMeta"></p>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-logout" id="sidebarLogoutBtn">Sign out</button>
+      </div>
+    </aside>
+
+    <!-- notif panel -->
+    <div class="notif-panel" id="notifPanel">
+      <div class="notif-panel-header">
+        <span>Notifications</span>
+        <button id="markAllReadBtn">Mark all read</button>
+      </div>
+      <div class="notif-list" id="notifList"></div>
+    </div>
+
+    <!-- main content -->
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow" id="portalEyebrow">Portal</span>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <button class="secondary-action" id="switchPortalBtn">Switch Portal</button>
+          <div class="notif-bell" id="notifBell">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-badge" id="notifBadge">0</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="status-strip">
+        <div>
+          <span class="label">Current</span>
+          <strong id="statusText">No active request</strong>
+        </div>
+        <div id="progressTrack" style="display:none;align-items:center;gap:8px;color:var(--muted)">
+          <span style="font-size:11px">Next:</span>
+          <span id="nextStatusText" style="font-weight:600;font-size:13px">—</span>
+        </div>
+      </div>
+
+      <!-- ─── CUSTOMER VIEW ─── -->
+      <section class="view active" id="customer">
+        <div id="custDashboard">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+            <!-- Left column: Request form + estimate -->
+            <div>
+              <form class="request-form" id="serviceForm" novalidate>
+                <div class="section-title"><span class="eyebrow">New request</span><h2 style="font-size:18px">Book a repair pickup</h2></div>
+                <label>Your name <input id="nameInput" placeholder="Full name" required></label>
+                <label>Phone <input id="phoneInput" type="tel" placeholder="+91 98xxx xxxxx" required></label>
+                <label>Device brand 
+                  <select id="brandInput" required>
+                    <option value="">Select brand</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="Google">Google</option>
+                    <option value="OnePlus">OnePlus</option>
+                    <option value="Xiaomi">Xiaomi</option>
+                    <option value="Vivo">Vivo</option>
+                    <option value="Oppo">Oppo</option>
+                    <option value="Redmi">Redmi</option>
+                    <option value="Realme">Realme</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <label>Device model 
+                  <select id="modelInput" required>
+                    <option value="">Select model</option>
+                  </select>
+                </label>
+                <label>Problem 
+                  <select id="issueInput" required>
+                    <option value="Screen / Display">Screen / Display</option>
+                    <option value="Battery / Power">Battery / Power</option>
+                    <option value="Charging port">Charging port</option>
+                    <option value="Water damage">Water damage</option>
+                    <option value="Speaker / Mic">Speaker / Mic</option>
+                    <option value="Motherboard">Motherboard</option>
+                    <option value="Connectivity">Connectivity</option>
+                    <option value="Physical damage">Physical damage</option>
+                    <option value="Software">Software</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <label>Pickup address <input id="addressInput" placeholder="Customer address"></label>
+                <label>Device photos <input id="requestImageInput" type="file" accept="image/*" multiple></label>
+                <div id="requestImagePreviews" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px"></div>
+
+                <!-- Estimate panel embedded inside form -->
+                <div class="estimate-panel" id="estimatePanel">
+                  <div class="estimate-header">
+                    <h3>📊 Estimate</h3>
+                    <button type="button" class="calculate-btn" id="calculateEstimateBtn">Calculate</button>
+                  </div>
+                  <div id="estimateContent">
+                    <div class="no-estimate">Select brand, model and issue then click "Calculate".</div>
+                  </div>
+                </div>
+
+                <button class="primary-action full" type="submit">Create Service Request</button>
+              </form>
+            </div>
+
+            <!-- Right column: Active service panel + request list -->
+            <div>
+              <div class="customer-panel" id="customerPanel" style="display:none">
+                <div class="device-hero">
+                  <div class="icon" id="deviceHeroIcon">📱</div>
+                  <div>
+                    <span class="eyebrow">Active service</span>
+                    <h2 id="deviceTitle" style="font-size:18px">iPhone 14 Pro</h2>
+                    <p id="deviceIssue" style="color:var(--muted);font-size:13px">Screen damage</p>
+                    <div class="tag-row"><span>Warranty check</span><span>WhatsApp updates</span><span>OTP secured</span></div>
+                  </div>
+                </div>
+                <div id="statusGuidance" style="background:var(--accent-light);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:8px"></div>
+                <div id="requirementsSection" style="display:none;background:var(--bg);padding:12px 16px;border-radius:8px;margin:8px 0">
+                  <span class="eyebrow">Customisation</span>
+                  <h3 style="font-size:15px;margin:2px 0 8px">Back cover &amp; glass</h3>
+                  <label>Back cover <select id="backCoverInput"><option value="">Select…</option><option>Matte Black</option><option>Midnight Blue</option><option>Clear</option><option>Carbon Fibre</option><option>Glossy White</option><option>No change</option></select></label>
+                  <label>Glass <select id="glassInput"><option value="">Select…</option><option>Tempered Glass</option><option>Standard</option><option>Anti-Glare</option><option>Privacy Guard</option><option>No change</option></select></label>
+                  <button class="primary-action full" id="saveRequirements" style="margin-top:6px">Save</button>
+                </div>
+                <div class="quote-box"><div><span class="eyebrow">Quotation</span><h3 id="quoteStatus" style="font-size:14px">Waiting</h3><div id="quoteItemsList" class="quote-items"></div></div><strong id="quoteAmount">INR 0</strong><button id="approveQuote">Approve</button></div>
+                <div id="conditionSection" style="margin-top:10px"><span class="eyebrow">Device condition</span><h3 style="font-size:15px">Upload photos before pickup</h3><p style="font-size:12px;color:var(--muted)">Show the current condition for verification.</p>
+                  <div style="display:flex;gap:6px;margin-top:4px"><input id="conditionInput" type="file" accept="image/*" multiple><button class="primary-action" id="uploadConditionBtn" style="padding:6px 14px;font-size:12px">Upload</button></div>
+                  <div class="condition-previews" id="conditionPreviews" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"></div>
+                </div>
+                <div id="invoiceSection" style="display:none;margin-top:10px;padding:12px 16px;background:var(--bg);border-radius:8px"><span class="eyebrow">Payment</span><h3 style="font-size:15px">Invoice</h3><p style="font-size:13px;color:var(--muted)">Your service invoice is ready.</p><div style="font-size:22px;font-weight:700;color:var(--accent)" id="invoiceAmount">INR 7,999</div><div style="display:flex;gap:8px;margin-top:6px"><button class="primary-action" id="payOnlineBtn" style="padding:6px 18px;font-size:13px">Pay Online</button><button class="secondary-action" id="payCodBtn" style="padding:6px 18px;font-size:13px">Cash on Delivery</button></div><p id="paymentConfirmation" style="display:none;color:#065f46;font-weight:700;margin-top:4px"></p></div>
+                <div id="customerTimeline" style="margin-top:10px"></div>
+              </div>
+              <div id="custRequestsList" class="request-list" style="margin-top:12px"></div>
+            </div>
+          </div>
+
+          <div class="local-deals-section" style="margin-top:18px">
+            <div class="section-title"><span class="eyebrow" id="dealsLocationLabel">Hot deals near you</span><h2 style="font-size:18px">Certified devices from marketplace</h2></div>
+            <div class="local-deals-grid" id="localDealsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px"></div>
+          </div>
+        </div>
+        <div id="custRequestView" style="display:none">
+          <div class="detail-topbar">
+            <button id="custDetailBackBtn">← Back</button>
+            <span id="custDetailTitle" style="font-weight:700;font-size:18px"></span>
+            <span id="custDetailStatus" class="status-pill"></span>
+          </div>
+          <div id="custRequestContent"></div>
+        </div>
+      </section>
+
+      <!-- ─── COORDINATOR VIEW ─── -->
+      <section class="view" id="coordinator">
+        <div id="coordinatorDashboard">
+          <div class="metric-grid">
+            <article><span>Open Tickets</span><strong id="openTickets">0</strong></article>
+            <article><span>Pending Action</span><strong id="pendingActionCount" style="color:#e74c3c">0</strong></article>
+            <article><span>Cities</span><strong id="cityCount">0</strong></article>
+            <article><span>Revenue</span><strong id="revenueMetric">INR 0</strong></article>
+          </div>
+          <div class="segmented" id="coordFilterBar" style="margin-bottom:12px">
+            <button class="active" data-cf="all">All</button>
+            <button data-cf="new">New</button>
+            <button data-cf="active">Active</button>
+            <button data-cf="repair">Repair</button>
+            <button data-cf="delivery">Delivery</button>
+            <button data-cf="closed">Closed</button>
+          </div>
+          <div class="coord-dashboard-layout">
+            <div class="coord-left-panel">
+              <div id="requestList" class="coord-grouped-list"></div>
+            </div>
+            <div class="coord-right-panel">
+              <div class="detail-card" id="pendingActions">
+                <div class="section-title"><span class="eyebrow">Urgent</span><h2 style="font-size:16px">Pending actions <span id="pendingCountBadge" style="background:#e74c3c;color:#fff;padding:0 8px;border-radius:10px;font-size:11px;margin-left:4px">0</span></h2></div>
+                <div id="pendingActionsList" class="pending-scroll"></div>
+              </div>
+              <div class="detail-card">
+                <div class="section-title"><span class="eyebrow">Request detail</span><h2 style="font-size:16px" id="detailPanelTitle">Control desk</h2></div>
+                <div id="coordinatorDetailContent" class="detail-scroll"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="coordinatorRequestView" style="display:none">
+          <div class="detail-topbar">
+            <button id="detailBackBtn">← Back</button>
+            <span id="detailViewTitle" style="font-weight:700;font-size:18px"></span>
+            <span id="detailViewStatus" class="status-pill"></span>
+          </div>
+          <div id="coordinatorRequestContent"></div>
+        </div>
+      </section>
+
+      <!-- ─── TECHNICIAN VIEW ─── -->
+      <section class="view" id="technician">
+        <div id="techDashboard">
+          <div class="metric-grid" style="grid-template-columns:repeat(3,1fr)">
+            <article><span>Total Jobs</span><strong id="techAssignedCount">0</strong></article>
+            <article><span>Active</span><strong id="techActiveCount">0</strong></article>
+            <article><span>Completed</span><strong id="techCompletedCount">0</strong></article>
+          </div>
+          <div id="techJobsList" style="margin-bottom:14px">
+            <div class="section-title"><span class="eyebrow">Jobs</span><h2 style="font-size:18px">Assigned tasks</h2></div>
+            <div id="techRequestsList" class="request-list"></div>
+          </div>
+          <div id="techActiveJobCard" style="background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span id="techJobBadge" class="status-pill pickup">Pickup</span>
+              <span id="techJobId" style="font-weight:700;font-size:14px">—</span>
+            </div>
+            <h2 id="techJobTitle" style="font-size:17px;margin:0 0 2px">No active job</h2>
+            <p id="techJobDesc" style="font-size:13px;color:var(--muted);margin:0 0 4px">—</p>
+            <p id="techJobMeta" style="font-size:12px;color:var(--muted);margin:0 0 8px"></p>
+            <div id="techConditionPreviews" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
+            <div id="techOtpSection" style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <input id="otpInput" maxlength="4" value="4821" style="width:70px;text-align:center;font-size:18px;font-weight:700">
+              <button id="verifyOtp" style="background:#3498db;color:#fff;padding:6px 16px;border-radius:6px;font-weight:600">Verify OTP</button>
+            </div>
+            <div id="techChecklist" class="checklist"></div>
+          </div>
+        </div>
+        <div id="techRequestView" style="display:none">
+          <div class="detail-topbar">
+            <button id="techDetailBackBtn" style="background:#e67e22">← Back</button>
+            <span id="techDetailTitle" style="font-weight:700;font-size:18px"></span>
+            <span id="techDetailStatus" class="status-pill"></span>
+          </div>
+          <div id="techRequestContent"></div>
+        </div>
+      </section>
+
+      <!-- ─── REPAIRMASTER VIEW ─── -->
+      <section class="view" id="repairmaster">
+        <div id="rmDashboard">
+          <div class="metric-grid" style="grid-template-columns:repeat(3,1fr)">
+            <article><span>Assigned</span><strong id="rmAssignedCount">0</strong></article>
+            <article><span>Completed</span><strong id="rmCompletedCount">0</strong></article>
+            <article><span>In Progress</span><strong id="rmInProgressCount">0</strong></article>
+          </div>
+          <div id="rmJobsList" style="margin-bottom:14px">
+            <div class="section-title"><span class="eyebrow">Workbench</span><h2 style="font-size:18px">Assigned repairs</h2></div>
+            <div id="rmRequestsList" class="request-list"></div>
+          </div>
+          <div class="partner-layout">
+            <div class="diagnosis-card">
+              <span class="eyebrow">Diagnosis</span>
+              <h2 style="font-size:17px">Repair bench</h2>
+              <textarea id="diagnosisText">OLED display cracked. Touch works. Battery 86%.</textarea>
+              <div id="partsGrid" class="parts-grid"></div>
+              <div class="parts-controls">
+                <div class="fee-row"><label style="font-size:12px;flex-direction:row;align-items:center;gap:6px">Diagnosis fee <input id="baseFeeInput" type="number" min="0" value="100" style="width:80px"></label></div>
+                <input id="newPartName" placeholder="Part name" style="flex:2;min-width:80px">
+                <input id="newPartCost" type="number" min="0" placeholder="Price" style="width:70px">
+                <input id="newPartStock" type="number" min="0" placeholder="Stock" style="width:60px">
+                <button id="addPartBtn" style="background:var(--accent);color:#fff;padding:6px 12px;border-radius:6px;font-weight:600">Add</button>
+              </div>
+              <button class="primary-action full" id="sendQuote" style="margin-top:8px">Send Quotation</button>
+            </div>
+            <div class="inventory-card">
+              <div class="section-title"><span class="eyebrow">Inventory</span><h2 style="font-size:16px">Parts availability</h2></div>
+              <div id="inventoryList"></div>
+              <div class="section-title" style="margin-top:14px"><span class="eyebrow">Sales</span><h2 style="font-size:16px">Sold device notifications</h2></div>
+              <div id="soldNotification"></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px">
+            <div class="market-upload-card">
+              <div class="section-title"><span class="eyebrow">Device on sell</span><h2 style="font-size:16px">Upload refurbished device</h2></div>
+              <form id="marketUploadForm" style="display:flex;flex-direction:column;gap:10px">
+                <label>Model <input id="listingModel" value="iPhone 13 128GB"></label>
+                <label>Grade <select id="listingGrade"><option>A+</option><option>A</option><option>B</option><option>C</option></select></label>
+                <label>Images <input id="listingImage" type="file" accept="image/*" multiple></label>
+                <label>Price <input id="listingPrice" type="number" value="36999"></label>
+                <label>Warranty <select id="listingWarranty"><option>12 months</option><option>9 months</option><option>6 months</option><option>3 months</option></select></label>
+                <div class="commission-preview"><span>Customer pays (incl. 10% fee)</span><strong id="listingCommission">INR 40,699</strong></div>
+                <button class="primary-action full" type="submit">Upload to Device on sell</button>
+              </form>
+            </div>
+            <div class="custom-back-card">
+              <div class="section-title"><span class="eyebrow">Custom service</span><h2 style="font-size:16px">Customize Back Cover</h2></div>
+              <form id="backCoverForm" style="display:flex;flex-direction:column;gap:10px">
+                <label>Device model <input id="bcModel" value="iPhone 14 Pro"></label>
+                <label>Design <select id="bcDesign"><option>Matte Black</option><option>Glossy White</option><option>Carbon Fiber</option><option>Transparent</option><option>Custom Print</option></select></label>
+                <label>Customer <input id="bcCustomer" value="Priya Sharma"></label>
+                <div class="commission-preview"><span>Service price</span><strong>INR 499</strong></div>
+                <button class="primary-action full" type="submit">Create Back Cover Order</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="rmRequestView" style="display:none">
+          <div class="detail-topbar">
+            <button id="rmDetailBackBtn" style="background:#8e44ad">← Back</button>
+            <span id="rmDetailTitle" style="font-weight:700;font-size:18px"></span>
+            <span id="rmDetailStatus" class="status-pill"></span>
+          </div>
+          <div id="rmRequestContent"></div>
+        </div>
+      </section>
+
+      <!-- ─── ADMIN VIEW ─── -->
+      <section class="view" id="admin">
+        <div id="adminDashboard">
+          <div class="metric-grid">
+            <article><span>Platform Commission</span><strong id="platformCommission">INR 0</strong></article>
+            <article><span>Escalations</span><strong id="escalations">0</strong></article>
+            <article><span>Total Requests</span><strong id="totalRequests">0</strong></article>
+            <article><span>Pending Apps</span><strong id="pendingApps">0</strong></article>
+          </div>
+          <div class="admin-grid">
+            <div class="chart-panel">
+              <div class="section-title"><span class="eyebrow">Requests overview</span><h2 style="font-size:16px">Status breakdown</h2></div>
+              <div id="statusBreakdown"></div>
+              <div class="section-title" style="margin-top:14px"><span class="eyebrow">Network health</span><h2 style="font-size:16px">Weekly repair volume</h2></div>
+              <div class="bar-chart" id="barChart"></div>
+            </div>
+            <div class="vendor-panel">
+              <div class="section-title"><span class="eyebrow">Partners</span><h2 style="font-size:16px">RepairingMaster performance</h2></div>
+              <div id="vendorList"></div>
+              <div class="section-title" style="margin-top:14px"><span class="eyebrow">Applications</span><h2 style="font-size:16px">Role requests by location</h2></div>
+              <div class="segmented" id="appFilterBar" style="margin-bottom:6px">
+                <button class="active" data-appfilter="All">All</button>
+                <button data-appfilter="Pending">Pending</button>
+                <button data-appfilter="Approved">Approved</button>
+                <button data-appfilter="Rejected">Rejected</button>
+              </div>
+              <div id="applicationList"></div>
+            </div>
+          </div>
+          <div class="section-title" style="margin-top:18px"><span class="eyebrow">All requests</span><h2 style="font-size:16px">Service requests</h2></div>
+          <div id="adminRequestsList" class="request-list"></div>
+          <div class="section-title" style="margin-top:18px"><span class="eyebrow">Field ops</span><h2 style="font-size:16px">Technician performance</h2></div>
+          <div id="techPerformanceList"></div>
+          <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px">
+            <div class="section-title"><span class="eyebrow">Recruitment</span><h2 style="font-size:16px">Job postings</h2></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div id="jobPostingList"></div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)">
+                <h3 style="font-size:14px;margin-bottom:10px">Create job posting</h3>
+                <form id="jobPostingForm" style="display:flex;flex-direction:column;gap:8px">
+                  <label style="font-size:12px">Job title <input id="jobTitle" placeholder="e.g. Senior Technician" required></label>
+                  <label style="font-size:12px">Role <select id="jobRole"><option>Technician</option><option>RepairingMaster</option><option>Coordinator</option><option>Admin</option></select></label>
+                  <label style="font-size:12px">Location <input id="jobLocation" placeholder="e.g. Mumbai West"></label>
+                  <label style="font-size:12px">Description <textarea id="jobDescription" placeholder="Requirements…" rows="2"></textarea></label>
+                  <button class="primary-action full" type="submit">Post Opening</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="adminRequestView" style="display:none">
+          <div class="detail-topbar">
+            <button id="adminDetailBackBtn" style="background:#2c3e50">← Back</button>
+            <span id="adminDetailTitle" style="font-weight:700;font-size:18px"></span>
+            <span id="adminDetailStatus" class="status-pill"></span>
+          </div>
+          <div id="adminRequestContent"></div>
+        </div>
+      </section>
+
+      <!-- ─── MARKETPLACE VIEW ─── -->
+      <section class="view" id="marketplace">
+        <div class="market-header">
+          <div>
+            <span class="eyebrow">Device on sell</span>
+            <h2>Certified devices with warranty</h2>
+            <p class="market-subtitle">All prices include platform service fee. No hidden charges.</p>
+          </div>
+          <div class="segmented" id="marketFilter">
+            <button class="active" data-grade="All">All</button>
+            <button data-grade="A+">A+</button>
+            <button data-grade="A">A</button>
+            <button data-grade="B">B</button>
+            <button data-grade="C">C</button>
+          </div>
+        </div>
+        <div class="market-grid" id="marketGrid"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ─── SCRIPTS ─── -->
+  <script>
+    // ─── toast ───
+    const toastEl = document.getElementById('toast');
+    function showToast(msg, duration = 2600) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastEl._timer);
+      toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), duration);
+    }
+
+    // ─── login tabs ───
+    const loginTabs = document.querySelectorAll('#loginTabs button');
+    const loginHelper = document.getElementById('loginHelper');
+    const nameField = document.getElementById('nameField');
+    const cityField = document.getElementById('cityField');
+    const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+
+    loginTabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        loginTabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        if (tab === 'signin') {
+          loginHelper.textContent = 'Welcome back — sign in to continue';
+          nameField.style.display = 'none';
+          cityField.style.display = 'none';
+          loginSubmitBtn.textContent = 'Sign In';
+        } else if (tab === 'signup') {
+          loginHelper.textContent = 'Create an account to get started';
+          nameField.style.display = 'block';
+          cityField.style.display = 'block';
+          loginSubmitBtn.textContent = 'Create Account';
+        } else {
+          loginHelper.textContent = 'Apply as an employee';
+          nameField.style.display = 'block';
+          cityField.style.display = 'block';
+          loginSubmitBtn.textContent = 'Apply';
+        }
+      });
+    });
+
+    // ─── role pills for application ───
+    document.querySelectorAll('.role-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+
+    // ─── login form ───
+    document.getElementById('unifiedLoginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const activeTab = document.querySelector('#loginTabs .active');
+      const tab = activeTab ? activeTab.dataset.tab : 'signin';
+      if (tab === 'signin') {
+        showToast('Signed in successfully (demo)');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appShell').style.display = 'flex';
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('customer').classList.add('active');
+        document.getElementById('portalEyebrow').textContent = 'Customer Portal';
+        document.getElementById('pageTitle').textContent = 'Dashboard';
+        updateUserBadge('Customer', 'C');
+        renderDemoData();
+      } else if (tab === 'signup') {
+        showToast('Account created! Please sign in.');
+      } else {
+        showToast('Application submitted!');
+      }
+    });
+
+    // ─── test login ───
+    function handleTestLogin(role) {
+      const labels = { customer:'Customer', coordinator:'Coordinator', technician:'Technician', repairmaster:'RepairingMaster', admin:'Admin' };
+      const initials = { customer:'C', coordinator:'CO', technician:'T', repairmaster:'RM', admin:'A' };
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appShell').style.display = 'flex';
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+      let viewId = role;
+      if (role === 'repairmaster') viewId = 'repairmaster';
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add('active');
+
+      const portalNames = { customer:'Customer Portal', coordinator:'Coordinator Portal', technician:'Technician Portal', repairmaster:'RepairingMaster Portal', admin:'Admin Portal' };
+      document.getElementById('portalEyebrow').textContent = portalNames[role] || 'Portal';
+      document.getElementById('pageTitle').textContent = 'Dashboard';
+      updateUserBadge(labels[role] || 'User', initials[role] || 'U');
+      renderDemoData();
+      showToast(`Signed in as ${labels[role] || role}`);
+    }
+
+    function handleGoogleLogin() { showToast('Google sign-in (demo)'); }
+
+    function updateUserBadge(name, initial) {
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userRoleBadge').textContent = name;
+      document.getElementById('userAvatar').textContent = initial || 'U';
+    }
+
+    // ─── sidebar logout ───
+    document.getElementById('sidebarLogoutBtn').addEventListener('click', () => {
+      document.getElementById('appShell').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'grid';
+      showToast('Signed out');
+    });
+
+    // ─── switch portal ───
+    document.getElementById('switchPortalBtn').addEventListener('click', () => {
+      const views = ['customer','coordinator','technician','repairmaster','admin','marketplace'];
+      const current = document.querySelector('.view.active');
+      let idx = views.indexOf(current ? current.id : 'customer');
+      idx = (idx + 1) % views.length;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const next = document.getElementById(views[idx]);
+      if (next) next.classList.add('active');
+      const portalNames = { customer:'Customer Portal', coordinator:'Coordinator Portal', technician:'Technician Portal', repairmaster:'RepairingMaster Portal', admin:'Admin Portal', marketplace:'Marketplace' };
+      document.getElementById('portalEyebrow').textContent = portalNames[views[idx]] || 'Portal';
+      document.getElementById('pageTitle').textContent = 'Dashboard';
+      showToast(`Switched to ${portalNames[views[idx]]}`);
+    });
+
+    // ─── notif bell ───
+    document.getElementById('notifBell').addEventListener('click', () => {
+      document.getElementById('notifPanel').classList.toggle('open');
+    });
+
+    // ───  Parts Database (static for demo) ───
+    const partsDB = {
+      'Apple': {
+        'iPhone 14 Pro': {
+          'Screen / Display': { parts: [{ name: 'OLED Display', price: 14000 }], labor: 2000 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 5500 }], labor: 1200 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1800 }], labor: 1000 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 3000 }], labor: 2500 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2500 }], labor: 1200 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 8000 }], labor: 3500 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 2200 }], labor: 1000 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 4000 }], labor: 2000 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 800 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 1000 }
+        },
+        'iPhone 13': {
+          'Screen / Display': { parts: [{ name: 'OLED Display', price: 12000 }], labor: 1800 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 4800 }], labor: 1000 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1500 }], labor: 800 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 2500 }], labor: 2200 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2200 }], labor: 1000 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 7000 }], labor: 3000 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 2000 }], labor: 900 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 3500 }], labor: 1800 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 700 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 900 }
+        },
+        'iPhone 12': {
+          'Screen / Display': { parts: [{ name: 'OLED Display', price: 10000 }], labor: 1500 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 4200 }], labor: 900 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1300 }], labor: 700 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 2000 }], labor: 2000 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2000 }], labor: 900 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 6000 }], labor: 2800 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 1800 }], labor: 800 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 3000 }], labor: 1600 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 600 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 800 }
+        }
+      },
+      'Samsung': {
+        'Galaxy S23 Ultra': {
+          'Screen / Display': { parts: [{ name: 'AMOLED Display', price: 16000 }], labor: 2200 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 6000 }], labor: 1300 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 2000 }], labor: 1100 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 3200 }], labor: 2600 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2800 }], labor: 1300 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 9000 }], labor: 3800 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 2500 }], labor: 1100 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 4500 }], labor: 2200 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 900 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 1100 }
+        },
+        'Galaxy S22': {
+          'Screen / Display': { parts: [{ name: 'AMOLED Display', price: 14000 }], labor: 2000 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 5200 }], labor: 1200 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1800 }], labor: 1000 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 2800 }], labor: 2400 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2500 }], labor: 1200 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 8000 }], labor: 3500 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 2200 }], labor: 1000 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 4000 }], labor: 2000 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 800 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 1000 }
+        }
+      },
+      'Google': {
+        'Pixel 7 Pro': {
+          'Screen / Display': { parts: [{ name: 'OLED Display', price: 13000 }], labor: 1900 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 5000 }], labor: 1100 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1700 }], labor: 900 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 2600 }], labor: 2300 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2300 }], labor: 1100 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 7500 }], labor: 3300 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 2100 }], labor: 950 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 3800 }], labor: 1900 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 750 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 950 }
+        }
+      },
+      'OnePlus': {
+        'OnePlus 11': {
+          'Screen / Display': { parts: [{ name: 'AMOLED Display', price: 12000 }], labor: 1800 },
+          'Battery / Power': { parts: [{ name: 'Battery', price: 4600 }], labor: 1000 },
+          'Charging port': { parts: [{ name: 'Charging Port Flex', price: 1500 }], labor: 800 },
+          'Water damage': { parts: [{ name: 'Water Damage Repair Kit', price: 2400 }], labor: 2100 },
+          'Speaker / Mic': { parts: [{ name: 'Speaker Assembly', price: 2100 }], labor: 1000 },
+          'Motherboard': { parts: [{ name: 'Motherboard Repair', price: 6800 }], labor: 3000 },
+          'Connectivity': { parts: [{ name: 'WiFi/Bluetooth Module', price: 1900 }], labor: 900 },
+          'Physical damage': { parts: [{ name: 'Chassis Frame', price: 3400 }], labor: 1800 },
+          'Software': { parts: [{ name: 'Software Restoration', price: 0 }], labor: 700 },
+          'Other': { parts: [{ name: 'General Diagnosis', price: 0 }], labor: 900 }
+        }
+      }
+    };
+
+    // ─── Populate model dropdown based on brand ───
+    const brandSelect = document.getElementById('brandInput');
+    const modelSelect = document.getElementById('modelInput');
+
+    function populateModels(brand) {
+      modelSelect.innerHTML = '<option value="">Select model</option>';
+      if (!brand || !partsDB[brand]) return;
+      const models = Object.keys(partsDB[brand]);
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        modelSelect.appendChild(opt);
+      });
+    }
+
+    brandSelect.addEventListener('change', () => {
+      populateModels(brandSelect.value);
+      // auto-clear estimate
+      document.getElementById('estimateContent').innerHTML = '<div class="no-estimate">Select model and issue then click "Calculate".</div>';
+    });
+
+    // ─── Estimate calculation ───
+    function calculateEstimate() {
+      const brand = brandSelect.value;
+      const model = modelSelect.value;
+      const issue = document.getElementById('issueInput').value;
+      if (!brand || !model || !issue) {
+        showToast('Please select brand, model and issue first.', 2000);
+        return;
+      }
+
+      const brandData = partsDB[brand];
+      if (!brandData) {
+        document.getElementById('estimateContent').innerHTML = '<div class="no-estimate">No pricing data for this brand.</div>';
+        return;
+      }
+      const modelData = brandData[model];
+      if (!modelData) {
+        document.getElementById('estimateContent').innerHTML = '<div class="no-estimate">No pricing data for this model.</div>';
+        return;
+      }
+      const issueData = modelData[issue];
+      if (!issueData) {
+        document.getElementById('estimateContent').innerHTML = '<div class="no-estimate">No pricing data for this issue type.</div>';
+        return;
+      }
+
+      const parts = issueData.parts;
+      const labor = issueData.labor;
+      const totalParts = parts.reduce((sum, p) => sum + p.price, 0);
+      const subtotal = totalParts + labor;
+      const serviceFee = Math.round(subtotal * 0.10); // 10% platform fee
+      const grandTotal = subtotal + serviceFee;
+
+      let html = `<div class="estimate-breakdown">`;
+      parts.forEach(p => {
+        html += `<div class="part-row"><span>${p.name}</span><span>₹${p.price.toLocaleString()}</span></div>`;
+      });
+      html += `<div class="part-row"><span>Labor</span><span>₹${labor.toLocaleString()}</span></div>`;
+      html += `<div class="part-row" style="color:var(--muted);font-size:13px"><span>Platform fee (10%)</span><span>₹${serviceFee.toLocaleString()}</span></div>`;
+      html += `</div>`;
+      html += `<div class="estimate-total"><span>Estimated Total</span><span class="total-amount">₹${grandTotal.toLocaleString()}</span></div>`;
+      html += `<div class="estimate-meta">* Final quote may vary after inspection.</div>`;
+
+      document.getElementById('estimateContent').innerHTML = html;
+    }
+
+    document.getElementById('calculateEstimateBtn').addEventListener('click', calculateEstimate);
+
+    // Also auto-calc when issue changes (optional)
+    document.getElementById('issueInput').addEventListener('change', calculateEstimate);
+
+    // ─── render demo data ───
+    function renderDemoData() {
+      // hot deals
+      const deals = [
+        { name: 'iPhone 13', price: '₹36,999', grade: 'A+' },
+        { name: 'Samsung S22', price: '₹32,499', grade: 'A' },
+        { name: 'OnePlus 11', price: '₹28,999', grade: 'B' },
+      ];
+      const dealsGrid = document.getElementById('hotDealsGrid');
+      if (dealsGrid) {
+        dealsGrid.innerHTML = deals.map(d =>
+          `<div class="deal-item"><div><strong>${d.name}</strong><span>Grade ${d.grade}</span></div><span class="price">${d.price}</span></div>`
+        ).join('');
+      }
+
+      const localGrid = document.getElementById('localDealsGrid');
+      if (localGrid) {
+        localGrid.innerHTML = deals.map(d =>
+          `<div class="deal-item" style="flex-direction:column;align-items:flex-start;gap:2px"><strong>${d.name}</strong><span style="font-size:12px;color:var(--muted)">Grade ${d.grade}</span><span class="price">${d.price}</span></div>`
+        ).join('');
+      }
+
+      // marketplace
+      const marketGrid = document.getElementById('marketGrid');
+      if (marketGrid) {
+        const items = [
+          { name: 'iPhone 14 Pro', price: '₹54,999', grade: 'A+', img: '📱' },
+          { name: 'Samsung S23 Ultra', price: '₹48,999', grade: 'A', img: '📱' },
+          { name: 'Google Pixel 7', price: '₹39,999', grade: 'A', img: '📱' },
+          { name: 'OnePlus 11R', price: '₹32,999', grade: 'B', img: '📱' },
+          { name: 'iPhone 13 Mini', price: '₹29,999', grade: 'A+', img: '📱' },
+          { name: 'Xiaomi 13 Pro', price: '₹26,999', grade: 'B', img: '📱' },
+        ];
+        marketGrid.innerHTML = items.map(it =>
+          `<div class="market-item"><div style="font-size:48px;text-align:center;padding:12px 0;background:var(--bg);border-radius:8px;margin-bottom:6px">${it.img}</div><h4>${it.name}</h4><div class="meta">Grade ${it.grade} · 12mo warranty</div><div class="price">${it.price}</div></div>`
+        ).join('');
+      }
+
+      // customer requests
+      const reqList = document.getElementById('custRequestsList');
+      if (reqList) {
+        reqList.innerHTML = `
+          <div class="request-item"><div class="left"><strong>iPhone 14 Pro</strong><span>Screen damage · Pickup today</span></div><span class="status-pill active">Active</span></div>
+          <div class="request-item"><div class="left"><strong>Samsung S22</strong><span>Battery issue · Completed</span></div><span class="status-pill closed">Closed</span></div>
+        `;
+      }
+
+      // coordinator
+      const openTickets = document.getElementById('openTickets');
+      if (openTickets) openTickets.textContent = '12';
+      const pendingAction = document.getElementById('pendingActionCount');
+      if (pendingAction) pendingAction.textContent = '4';
+      const cityCount = document.getElementById('cityCount');
+      if (cityCount) cityCount.textContent = '8';
+      const revenue = document.getElementById('revenueMetric');
+      if (revenue) revenue.textContent = 'INR 1,24,500';
+
+      const pendingList = document.getElementById('pendingActionsList');
+      if (pendingList) {
+        pendingList.innerHTML = `
+          <div class="pending-item"><span>#RM-102 · iPhone 13</span><span class="badge">Quotation</span></div>
+          <div class="pending-item"><span>#RM-103 · Samsung S22</span><span class="badge">Pickup</span></div>
+          <div class="pending-item"><span>#RM-104 · OnePlus 11</span><span class="badge">Delivery</span></div>
+        `;
+      }
+
+      // technician
+      const techAssigned = document.getElementById('techAssignedCount');
+      if (techAssigned) techAssigned.textContent = '8';
+      const techActive = document.getElementById('techActiveCount');
+      if (techActive) techActive.textContent = '3';
+      const techCompleted = document.getElementById('techCompletedCount');
+      if (techCompleted) techCompleted.textContent = '5';
+      const techJobs = document.getElementById('techRequestsList');
+      if (techJobs) {
+        techJobs.innerHTML = `
+          <div class="request-item"><div class="left"><strong>iPhone 14 Pro</strong><span>Screen repair · Pickup</span></div><span class="status-pill pickup">Pickup</span></div>
+          <div class="request-item"><div class="left"><strong>Samsung S22</strong><span>Battery replacement · Repair</span></div><span class="status-pill repair">Repair</span></div>
+        `;
+      }
+
+      // repairmaster
+      const rmAssigned = document.getElementById('rmAssignedCount');
+      if (rmAssigned) rmAssigned.textContent = '6';
+      const rmCompleted = document.getElementById('rmCompletedCount');
+      if (rmCompleted) rmCompleted.textContent = '3';
+      const rmInProgress = document.getElementById('rmInProgressCount');
+      if (rmInProgress) rmInProgress.textContent = '2';
+      const rmJobs = document.getElementById('rmRequestsList');
+      if (rmJobs) {
+        rmJobs.innerHTML = `
+          <div class="request-item"><div class="left"><strong>iPhone 14 Pro</strong><span>Screen damage · In progress</span></div><span class="status-pill repair">Repair</span></div>
+          <div class="request-item"><div class="left"><strong>OnePlus 11</strong><span>Battery · Waiting parts</span></div><span class="status-pill active">Active</span></div>
+        `;
+      }
+
+      // admin
+      const platformCommission = document.getElementById('platformCommission');
+      if (platformCommission) platformCommission.textContent = 'INR 28,450';
+      const escalations = document.getElementById('escalations');
+      if (escalations) escalations.textContent = '2';
+      const totalRequests = document.getElementById('totalRequests');
+      if (totalRequests) totalRequests.textContent = '47';
+      const pendingApps = document.getElementById('pendingApps');
+      if (pendingApps) pendingApps.textContent = '5';
+
+      const barChart = document.getElementById('barChart');
+      if (barChart) {
+        const data = [12, 18, 22, 16, 20, 14, 10];
+        barChart.innerHTML = data.map((v, i) =>
+          `<div style="flex:1;display:flex;flex-direction:column;align-items:center"><div class="bar" style="height:${v*4}px;width:100%"></div><span class="bar-label">${['M','T','W','T','F','S','S'][i]}</span></div>`
+        ).join('');
+      }
+    }
+
+    // ─── application form ───
+    document.getElementById('applicationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('Application submitted! We\'ll review it shortly.');
+    });
+
+    // ─── service form ───
+    document.getElementById('serviceForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('Service request created! A coordinator will contact you.');
+      document.getElementById('customerPanel').style.display = 'block';
+      document.getElementById('deviceTitle').textContent = document.getElementById('modelInput').value || 'Device';
+      document.getElementById('deviceIssue').textContent = document.getElementById('issueInput').value || 'Issue';
+      document.getElementById('statusGuidance').textContent = '📦 Your request is being processed. A technician will be assigned shortly.';
+    });
+
+    // ─── quote approve ───
+    document.getElementById('approveQuote')?.addEventListener('click', () => {
+      showToast('Quote approved! Proceeding with repair.');
+    });
+
+    // ─── upload condition ───
+    document.getElementById('uploadConditionBtn')?.addEventListener('click', () => {
+      const input = document.getElementById('conditionInput');
+      if (input && input.files.length) {
+        const previews = document.getElementById('conditionPreviews');
+        for (const f of input.files) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '60px';
+            img.style.height = '60px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '6px';
+            img.style.border = '1px solid var(--border)';
+            previews.appendChild(img);
+          };
+          reader.readAsDataURL(f);
+        }
+        showToast('Condition photos uploaded.');
+      }
+    });
+
+    // ─── pay buttons ───
+    document.getElementById('payOnlineBtn')?.addEventListener('click', () => {
+      document.getElementById('paymentConfirmation').style.display = 'block';
+      document.getElementById('paymentConfirmation').textContent = '✅ Payment successful!';
+      showToast('Payment completed online.');
+    });
+    document.getElementById('payCodBtn')?.addEventListener('click', () => {
+      document.getElementById('paymentConfirmation').style.display = 'block';
+      document.getElementById('paymentConfirmation').textContent = '✅ Cash on delivery selected.';
+      showToast('COD confirmed.');
+    });
+
+    // ─── OTP verify ───
+    document.getElementById('verifyOtp')?.addEventListener('click', () => {
+      const otp = document.getElementById('otpInput').value;
+      if (otp === '4821') {
+        showToast('✅ OTP verified! Device handover confirmed.');
+      } else {
+        showToast('❌ Invalid OTP. Please try again.');
+      }
+    });
+
+    // ─── add part ───
+    document.getElementById('addPartBtn')?.addEventListener('click', () => {
+      const name = document.getElementById('newPartName').value;
+      const cost = document.getElementById('newPartCost').value;
+      const stock = document.getElementById('newPartStock').value;
+      if (name && cost) {
+        const grid = document.getElementById('partsGrid');
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:13px';
+        div.innerHTML = `<span>${name}</span><span>₹${cost} · stock ${stock || '—'}</span>`;
+        grid.appendChild(div);
+        document.getElementById('newPartName').value = '';
+        document.getElementById('newPartCost').value = '';
+        document.getElementById('newPartStock').value = '';
+        showToast('Part added to quotation.');
+      }
+    });
+
+    // ─── send quote ───
+    document.getElementById('sendQuote')?.addEventListener('click', () => {
+      showToast('Quotation sent to customer!');
+      document.getElementById('quoteStatus').textContent = 'Quotation sent';
+      document.getElementById('quoteAmount').textContent = 'INR 4,999';
+    });
+
+    // ─── market upload ───
+    document.getElementById('marketUploadForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const price = parseInt(document.getElementById('listingPrice').value) || 0;
+      const withFee = price * 1.1;
+      document.getElementById('listingCommission').textContent = `INR ${Math.round(withFee).toLocaleString()}`;
+      showToast('Device listed on marketplace!');
+    });
+
+    // ─── back cover form ───
+    document.getElementById('backCoverForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('Back cover order created!');
+    });
+
+    // ─── job posting ───
+    document.getElementById('jobPostingForm')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('jobTitle').value || 'New position';
+      const list = document.getElementById('jobPostingList');
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:4px;font-size:13px;display:flex;justify-content:space-between';
+      div.innerHTML = `<span><strong>${title}</strong> · ${document.getElementById('jobLocation').value || 'Remote'}</span><span style="color:var(--muted)">${document.getElementById('jobRole').value}</span>`;
+      list.prepend(div);
+      showToast('Job posting created!');
+      document.getElementById('jobTitle').value = '';
+      document.getElementById('jobDescription').value = '';
+    });
+
+    // ─── market filter ───
+    document.querySelectorAll('#marketFilter button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#marketFilter button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`Filtered: ${btn.dataset.grade}`);
+      });
+    });
+
+    // ─── coordinator filter ───
+    document.querySelectorAll('#coordFilterBar button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#coordFilterBar button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`Filter: ${btn.dataset.cf}`);
+      });
+    });
+
+    // ─── app filter ───
+    document.querySelectorAll('#appFilterBar button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#appFilterBar button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showToast(`Filter: ${btn.dataset.appfilter}`);
+      });
+    });
+
+    // ─── mark all read ───
+    document.getElementById('markAllReadBtn')?.addEventListener('click', () => {
+      document.querySelectorAll('.notif-item').forEach(el => el.classList.remove('unread'));
+      document.getElementById('notifBadge').textContent = '0';
+      showToast('All notifications marked read');
+    });
+
+    // ─── save requirements ───
+    document.getElementById('saveRequirements')?.addEventListener('click', () => {
+      showToast('Requirements saved!');
+    });
+
+    // ─── back buttons (detail views) ───
+    document.querySelectorAll('[id$="DetailBackBtn"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parent = btn.closest('.view');
+        if (parent) {
+          const dashId = parent.id + 'Dashboard';
+          const dash = document.getElementById(dashId);
+          const view = document.getElementById(parent.id + 'RequestView');
+          if (dash) dash.style.display = 'block';
+          if (view) view.style.display = 'none';
+        }
+      });
+    });
+
+    // ─── initial render ───
+    renderDemoData();
+    // initial model population (if brand pre-selected)
+    if (brandSelect.value) populateModels(brandSelect.value);
+
+    console.log('✨ RepairingMaster with Estimate Calculator loaded.');
+  </script>
+</body>
+</html>

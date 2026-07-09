@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certified Refurbished Device Store – RepairMaster</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: #0A0F1D;
+            color: #E8EDF5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .text-teal {
+            color: #14B8A6;
+        }
+        .btn-teal {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
+        }
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(13, 148, 136, 0.45);
+        }
+        .rm-logo {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #0A0F1D;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            flex-shrink: 0;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.65);
+            transition: all 0.3s;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #14B8A6;
+            border-bottom-color: #14B8A6;
+        }
+        /* Filter Button Active State */
+        .filter-btn.active {
+            background-color: #14B8A6;
+            color: #0A0F1D;
+            border-color: #14B8A6;
+        }
+        /* Mobile Hamburger menu overrides */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#0A0F1D]/90 backdrop-blur-md border-b border-white/5 py-2 md:py-3 shadow-lg">
+        <div class="container-custom flex items-center justify-between gap-2 md:gap-4">
+            <div class="flex items-center gap-2 md:gap-4 cursor-pointer select-none" onclick="window.location.href='index.html'">
+                <!-- Logo Icon Container styled to match the mockup perfectly -->
+                <div class="relative flex items-center justify-center p-[2px] rounded-[15px] border border-teal/70 bg-[#0A0F1D] h-11 w-11 md:h-[64px] md:w-[64px] shadow-[0_0_20px_rgba(20,184,166,0.25)] shrink-0 transition-transform duration-300 hover:scale-105">
+                    <img src="assets/images/logo.png" alt="RepairMaster Logo" class="h-full w-full object-cover rounded-[13px]" />
+                </div>
+                
+                <!-- Vertical Divider -->
+                <div class="h-8 md:h-[54px] w-[1.5px] bg-teal/60 shrink-0"></div>
+                
+                <!-- Branding Text Block -->
+                <div class="flex flex-col justify-center relative pr-4 md:pr-8">
+                    <div class="font-display text-sm sm:text-base md:text-lg font-bold tracking-tight leading-none text-white">
+                        Repair<span class="text-teal">Master</span>
+                    </div>
+                    <!-- Horizontal Line -->
+                    <div class="w-full h-[1px] bg-teal/40 my-0.5 md:my-1"></div>
+                    <!-- Tagline -->
+                    <div class="text-[7px] sm:text-[8px] md:text-[10px] font-normal text-gray-400 leading-none tracking-normal">
+                        Direct To Consumer
+                    </div>
+                    <!-- Powered By -->
+                    <div class="text-[6px] sm:text-[7px] md:text-[8px] text-white/50 italic mt-0.5 leading-none">
+                        powered by <span class="text-teal font-medium not-italic">cm2us.com</span>
+                    </div>
+                    
+                    <!-- Sparkles Sparkle on the Right of the text -->
+                    <div class="absolute right-0 bottom-1 flex flex-col items-center gap-1">
+                        <!-- Large Sparkle -->
+                        <svg class="w-2 h-2 md:w-2.5 md:h-2.5 text-teal animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation tabs (Center) -->
+            <nav class="desktop-nav hidden md:flex items-center gap-8 text-sm font-semibold mx-auto" id="mainNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="request.html" class="nav-link">Repair Request</a>
+                <a href="marketplace.html" class="nav-link active">Marketplace</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </nav>
+
+            <!-- Sign In/Sign Up or Profile dropdown (Right) -->
+            <div class="desktop-nav hidden md:flex items-center gap-4">
+                <a href="login.html" class="nav-link text-sm font-semibold" id="navLogin">Login</a>
+                <a href="signup.html" class="btn-teal py-2 px-5 text-xs font-bold rounded-xl shadow-none hover:scale-105 transition" id="navSignup">Sign Up</a>
+                <span id="navUserInfo" class="hidden flex items-center gap-4"></span>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-white text-2xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="pt-[96px] md:pt-[130px] pb-16">
+        <div class="container-custom">
+            
+            <!-- Hero Title Block -->
+            <div class="text-center space-y-3 mb-12">
+                <span class="inline-block bg-[#14B8A6]/15 text-[#14B8A6] text-xs px-4 py-1.5 rounded-full font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-store mr-1"></i> Certified Pre-Owned Store
+                </span>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-white font-display">Certified Refurbished Devices</h1>
+                <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">Premium quality inspected devices in Wardha region. Checked across 40+ checkpoints, thoroughly polished, and backed by a full warranty with secure doorstep delivery.</p>
+            </div>
+
+            <!-- Search & Filters Module -->
+            <div class="bg-[#0b1329]/40 border border-white/5 rounded-2xl p-6 mb-10 shadow-xl space-y-6">
+                <!-- Search bar -->
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="searchInput" oninput="filterDevices()" placeholder="Search devices by name, model, color..." class="w-full bg-slate-950/80 border border-slate-800 p-4 pl-12 rounded-xl text-sm text-white focus:border-[#14B8A6] outline-none transition-all">
+                </div>
+
+                <!-- Horizontal Filter Rows -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Brand Filter -->
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Filter by Brand</label>
+                        <select id="brandFilter" onchange="filterDevices()" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-sm text-white focus:border-[#14B8A6] outline-none">
+                            <option value="all">All Brands</option>
+                            <option value="apple">Apple</option>
+                            <option value="samsung">Samsung</option>
+                            <option value="oneplus">OnePlus</option>
+                            <option value="vivo">Vivo</option>
+                            <option value="redmi">Redmi</option>
+                            <option value="google">Google</option>
+                        </select>
+                    </div>
+
+                    <!-- Grade Filter -->
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Filter by Grade</label>
+                        <select id="gradeFilter" onchange="filterDevices()" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-sm text-white focus:border-[#14B8A6] outline-none">
+                            <option value="all">All Grades</option>
+                            <option value="grade-aplus">Grade A+ Pristine</option>
+                            <option value="grade-a">Grade A Excellent</option>
+                            <option value="grade-b">Grade B Value</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Filter -->
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block">Filter by Price Range</label>
+                        <select id="priceFilter" onchange="filterDevices()" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-sm text-white focus:border-[#14B8A6] outline-none">
+                            <option value="all">All Prices</option>
+                            <option value="under-20k">Under ₹20,000</option>
+                            <option value="20k-40k">₹20,000 - ₹40,000</option>
+                            <option value="over-40k">Over ₹40,000</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device Grid -->
+            <div id="deviceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Device 1: iPhone 14 Pro Max -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="apple" data-grade="grade-aplus" data-price="64990">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A+ Pristine</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">iPhone 14 Pro Max</h3>
+                        <p class="text-xs text-gray-400 mt-1">Deep Purple • 256GB • 92% Battery Health</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.9</span><span class="text-gray-500">(18 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹64,990</span>
+                        </div>
+                        <a href="request.html?buy=iphone14pm" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 2: Samsung Galaxy S23 Ultra -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="samsung" data-grade="grade-aplus" data-price="58500">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A+ Pristine</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">Samsung Galaxy S23 Ultra</h3>
+                        <p class="text-xs text-gray-400 mt-1">Phantom Black • 256GB • Certified Refurbished</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.8</span><span class="text-gray-500">(12 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹58,500</span>
+                        </div>
+                        <a href="request.html?buy=s23u" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 3: OnePlus 11 5G -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="oneplus" data-grade="grade-a" data-price="36400">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-teal-500/20 text-teal-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A Excellent</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">OnePlus 11 5G</h3>
+                        <p class="text-xs text-gray-400 mt-1">Eternal Green • 128GB • 100W Charger included</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.7</span><span class="text-gray-500">(9 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹36,400</span>
+                        </div>
+                        <a href="request.html?buy=op11" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 4: Vivo V30 Pro -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="vivo" data-grade="grade-a" data-price="31900">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-teal-500/20 text-teal-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A Excellent</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">Vivo V30 Pro</h3>
+                        <p class="text-xs text-gray-400 mt-1">Ocean Blue • 256GB • Zeiss Triple Camera</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.8</span><span class="text-gray-500">(15 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹31,900</span>
+                        </div>
+                        <a href="request.html?buy=vivov30p" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 5: Redmi Note 12 Pro -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="redmi" data-grade="grade-b" data-price="14200">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-amber-500/20 text-amber-450 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade B Value</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">Redmi Note 12 Pro</h3>
+                        <p class="text-xs text-gray-400 mt-1">Onyx Black • 128GB • High Speed Performance</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.5</span><span class="text-gray-500">(22 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹14,200</span>
+                        </div>
+                        <a href="request.html?buy=redmi12p" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 6: iPad Air 5th Gen -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="apple" data-grade="grade-aplus" data-price="39990">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-emerald-500/20 text-emerald-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A+ Pristine</span>
+                            <i class="fa-solid fa-tablet-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">iPad Air 5th Gen</h3>
+                        <p class="text-xs text-gray-400 mt-1">Space Gray • 64GB • WiFi Only • M1 Chip</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.9</span><span class="text-gray-500">(7 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹39,990</span>
+                        </div>
+                        <a href="request.html?buy=ipadair5" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 7: Google Pixel 7 Pro -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="google" data-grade="grade-a" data-price="38900">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-teal-500/20 text-teal-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A Excellent</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">Google Pixel 7 Pro</h3>
+                        <p class="text-xs text-gray-400 mt-1">Obsidian • 128GB • Tensor G2 • Super Smooth</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.6</span><span class="text-gray-500">(15 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹38,900</span>
+                        </div>
+                        <a href="request.html?buy=pixel7p" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 8: iPhone 13 -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="apple" data-grade="grade-a" data-price="34900">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-teal-500/20 text-teal-400 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade A Excellent</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">iPhone 13</h3>
+                        <p class="text-xs text-gray-400 mt-1">Midnight Black • 128GB • A15 Bionic Chip</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.7</span><span class="text-gray-500">(14 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹34,900</span>
+                        </div>
+                        <a href="request.html?buy=iphone13" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+                <!-- Device 9: Samsung Galaxy S22 Plus -->
+                <div class="device-card bg-[#121B33]/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl overflow-hidden p-5 flex flex-col justify-between transition-all duration-300 shadow-lg" data-brand="samsung" data-grade="grade-b" data-price="28990">
+                    <div>
+                        <div class="relative bg-slate-950/60 rounded-xl p-4 flex items-center justify-center mb-4">
+                            <span class="absolute top-2.5 left-2.5 bg-amber-500/20 text-amber-450 text-[9px] font-bold uppercase px-2 py-0.5 rounded">Grade B Value</span>
+                            <i class="fa-solid fa-mobile-screen-button text-6xl text-slate-800 my-4"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white font-display">Samsung Galaxy S22 Plus</h3>
+                        <p class="text-xs text-gray-400 mt-1">Green • 128GB • Premium Snapdragon Edition</p>
+                        <div class="flex items-center gap-1 mt-2 text-amber-400 text-xs">
+                            <i class="fa-solid fa-star"></i><span class="font-bold">4.4</span><span class="text-gray-500">(11 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-gray-500 uppercase block leading-none">Special Price</span>
+                            <span class="text-lg font-black text-white">₹28,990</span>
+                        </div>
+                        <a href="request.html?buy=s22p" class="bg-teal-600 hover:bg-teal-500 text-slate-950 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition">Inquire Availability</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Empty State for Filters -->
+            <div id="emptyState" class="hidden text-center py-24 space-y-4">
+                <i class="fa-solid fa-store-slash text-6xl text-slate-800 animate-bounce"></i>
+                <h3 class="text-xl font-bold text-white font-display">No Refurbished Devices Match Your Filters</h3>
+                <p class="text-gray-400 text-sm max-w-sm mx-auto">Try resetting or widening your brand, grade, or price selection above to discover more smartphones.</p>
+                <button onclick="resetFilters()" class="btn-teal mt-2">Reset Filters</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 bg-[#080D1A] py-12 pb-24 md:pb-12 mt-20 text-sm text-grayText">
+        <div class="container-custom grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="rm-logo w-10 h-10 text-lg rounded-xl"></div>
+                    <span class="font-bold text-white text-lg font-display">RepairMaster</span>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed">Premium Doorstep &amp; Laboratory Repairs for Nagpur, Wardha &amp; Amravati regions. Fast, reliable, and secure.</p>
+                <p class="text-[10px] text-gray-600">© 2026 RepairMaster. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Service Locations</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><span class="text-teal"><i class="fa-solid fa-location-dot mr-1"></i> Wardha Hub</span> (Fully Active)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Nagpur Hub (Coming soon)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Amravati Hub (Coming soon)</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="request.html" class="hover:text-teal transition"><i class="fa-regular fa-file-lines mr-1.5 text-teal"></i> Submit Repair Request</a></li>
+                    <li><a href="dashboard.html" class="hover:text-teal transition"><i class="fa-solid fa-chart-line mr-1.5 text-teal"></i> Customer Portal Dashboard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Platform Details</h4>
+                <p class="text-xs text-gray-500 leading-relaxed mb-3">RepairMaster is a next-gen Direct-To-Consumer smartphone service network. Engineered using Supabase Real-time PostgreSQL, Tailwind CSS, and Kotlin, our mission is to deliver transparent, fast, and high-density doorstep repairs across Maharashtra.</p>
+                <div class="text-xs text-gray-400 mt-2"><i class="fa-solid fa-phone text-teal mr-2"></i> +91 99999 99999</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Application Logic & Mobile Nav Drawer support -->
+    <script src="main.js"></script>
+
+    <!-- Page Specific Filtering Script -->
+    <script>
+        function filterDevices() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const brand = document.getElementById('brandFilter').value;
+            const grade = document.getElementById('gradeFilter').value;
+            const priceRange = document.getElementById('priceFilter').value;
+
+            const cards = document.querySelectorAll('.device-card');
+            let matchedCount = 0;
+
+            cards.forEach(card => {
+                const cardTitle = card.querySelector('h3').textContent.toLowerCase();
+                const cardText = card.querySelector('p').textContent.toLowerCase();
+                const cardBrand = card.getAttribute('data-brand');
+                const cardGrade = card.getAttribute('data-grade');
+                const cardPrice = parseInt(card.getAttribute('data-price'), 10);
+
+                // Check text match
+                const matchesText = cardTitle.includes(query) || cardText.includes(query);
+
+                // Check brand match
+                const matchesBrand = (brand === 'all') || (cardBrand === brand);
+
+                // Check grade match
+                const matchesGrade = (grade === 'all') || (cardGrade === grade);
+
+                // Check price match
+                let matchesPrice = true;
+                if (priceRange === 'under-20k') {
+                    matchesPrice = (cardPrice < 20000);
+                } else if (priceRange === '20k-40k') {
+                    matchesPrice = (cardPrice >= 20000 && cardPrice <= 40000);
+                } else if (priceRange === 'over-40k') {
+                    matchesPrice = (cardPrice > 40000);
+                }
+
+                if (matchesText && matchesBrand && matchesGrade && matchesPrice) {
+                    card.style.display = 'flex';
+                    matchedCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Toggle Empty State display
+            const emptyState = document.getElementById('emptyState');
+            if (matchedCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('brandFilter').value = 'all';
+            document.getElementById('gradeFilter').value = 'all';
+            document.getElementById('priceFilter').value = 'all';
+            filterDevices();
+        }
+    </script>
+</body>
+</html>

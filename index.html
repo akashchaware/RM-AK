@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- RepairMaster Application Entry Point -->
+    <title>RepairMaster – Premium Doorstep & Lab Repairs</title>
+    <link rel="icon" type="image/png" href="img_maintenance_mode_active.png.png" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #0A0F1D;
+            color: #f1f5f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .text-teal {
+            color: #0f8b8d;
+        }
+        .bg-teal-primary {
+            background-color: #0f8b8d;
+        }
+        .bg-teal-gradient {
+            background: linear-gradient(135deg, #0f8b8d, #14b8a6);
+        }
+        .transition-smooth {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Interactive Buttons and Elements */
+        .btn-primary {
+            background: linear-gradient(135deg, #0f8b8d, #14b8a6);
+            color: #ffffff;
+            font-weight: 700;
+            min-height: 48px;
+            padding: 12px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(15, 139, 141, 0.25);
+            border: none;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 139, 141, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: #f1f5f9;
+            min-height: 48px;
+            padding: 10px 26px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .btn-outline:hover {
+            border-color: #0f8b8d;
+            color: #0f8b8d;
+            background: rgba(15, 139, 141, 0.08);
+        }
+        .rm-logo {
+            background-image: url('img_maintenance_mode_active.png.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(15, 139, 141, 0.25);
+            border: 1px solid rgba(15, 139, 141, 0.3);
+        }
+        
+        /* Sticky tab button control */
+        .tab-button {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 44px;
+        }
+        .tab-button:hover {
+            color: #0f8b8d;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-button.active {
+            background-color: #0f8b8d;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 139, 141, 0.25);
+        }
+        
+        /* Dark theme inputs */
+        .custom-select {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #f1f5f9;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        .custom-select:focus {
+            border-color: #0f8b8d;
+            box-shadow: 0 0 0 3px rgba(15, 139, 141, 0.25);
+        }
+        
+        /* Custom styled card views */
+        .card-white {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+            transition: all 0.3s ease;
+            color: #cbd5e1;
+        }
+        .card-white:hover {
+            border-color: rgba(15, 139, 141, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(15, 139, 141, 0.15);
+        }
+        
+        /* Dynamic Offer Cards inside Dark Section */
+        .offer-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .offer-card:hover {
+            border-color: #0f8b8d;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(15, 139, 141, 0.15);
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="pt-16 md:pt-20">
+
+    <!-- Background Slideshow -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden bg-[#0A0F1D]">
+        <!-- Slides -->
+        <div class="absolute inset-0 transition-opacity duration-1000 bg-cover bg-center opacity-0 filter brightness-[0.25]" id="bg-slide-1" style="background-image: url('images/slide1.jpg');"></div>
+        <div class="absolute inset-0 transition-opacity duration-1000 bg-cover bg-center opacity-0 filter brightness-[0.25]" id="bg-slide-2" style="background-image: url('images/slide2.jpg');"></div>
+        <div class="absolute inset-0 transition-opacity duration-1000 bg-cover bg-center opacity-0 filter brightness-[0.25]" id="bg-slide-3" style="background-image: url('images/slide3.jpg');"></div>
+        <div class="absolute inset-0 transition-opacity duration-1000 bg-cover bg-center opacity-0 filter brightness-[0.25]" id="bg-slide-4" style="background-image: url('images/slide4.jpg');"></div>
+        <div class="absolute inset-0 transition-opacity duration-1000 bg-cover bg-center opacity-0 filter brightness-[0.25]" id="bg-slide-5" style="background-image: url('images/slide5.jpg');"></div>
+        <!-- Dark overlay to ensure text is perfectly readable -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0A0F1D]/80 via-[#0A0F1D]/70 to-[#0A0F1D]/90 z-0"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  HEADER (Sticky Top Bar)                           -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-900 py-3 md:py-4 shadow-lg">
+        <div class="container-custom flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 cursor-pointer select-none" onclick="window.location.href='index.html'">
+                <div class="rm-logo"></div>
+                <div class="h-6 w-[1px] bg-slate-800"></div>
+                <div class="flex flex-col">
+                    <span class="text-white font-extrabold text-base md:text-lg leading-none tracking-tight">
+                        Repair<span class="text-[#0f8b8d]">Master</span>
+                    </span>
+                    <span class="text-[8px] md:text-[9px] font-bold text-slate-400 tracking-wider uppercase mt-1">Direct To Consumer</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-300">
+                <a href="index.html" class="text-[#0f8b8d] hover:text-[#0f8b8d] transition">Home</a>
+                <a href="request.html" class="hover:text-[#0f8b8d] transition">Repair Request</a>
+                <a href="marketplace.html" class="hover:text-[#0f8b8d] transition">Marketplace</a>
+                <a href="dashboard.html" class="hover:text-[#0f8b8d] transition">Dashboard</a>
+            </nav>
+
+            <!-- Desktop Profile Actions -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="login.html" id="navLogin" class="text-sm font-bold text-slate-300 hover:text-[#0f8b8d] transition">Login</a>
+                <a href="signup.html" id="navSignup" class="btn-primary py-2 px-6 rounded-xl min-h-0 text-xs shadow-none">Sign Up</a>
+                <span id="navUserInfo" class="hidden flex items-center gap-3"></span>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-white text-2xl focus:outline-none w-11 h-11 flex items-center justify-center rounded-xl hover:bg-slate-900 transition" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  SECTION NAVIGATOR (Sticky Tabs)                   -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="tab-navigation-bar" class="sticky top-[58px] md:top-[74px] z-30 bg-slate-950/85 backdrop-blur-md border-b border-slate-900 py-2.5 shadow-md">
+        <div class="container-custom">
+            <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+                <button onclick="switchTab('estimate')" id="tab-btn-estimate" class="tab-button active px-5 py-2.5 text-xs md:text-sm font-bold rounded-full whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> Estimate
+                </button>
+                <button onclick="switchTab('how-it-works')" id="tab-btn-how-it-works" class="tab-button px-5 py-2.5 text-xs md:text-sm font-bold rounded-full whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-route"></i> How It Works
+                </button>
+                <button onclick="switchTab('why-us')" id="tab-btn-why-us" class="tab-button px-5 py-2.5 text-xs md:text-sm font-bold rounded-full whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i> Why Us
+                </button>
+                <button onclick="switchTab('marketplace')" id="tab-btn-marketplace" class="tab-button px-5 py-2.5 text-xs md:text-sm font-bold rounded-full whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-store"></i> Marketplace
+                </button>
+                <button onclick="switchTab('about')" id="tab-btn-about" class="tab-button px-5 py-2.5 text-xs md:text-sm font-bold rounded-full whitespace-nowrap flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i> About
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  DYNAMIC CONTENT TAB WRAPPER                      -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <main class="min-h-screen">
+
+        <!-- ────────────────────────────────────────────────── -->
+        <!--  TAB CONTENT: ESTIMATE                             -->
+        <!-- ────────────────────────────────────────────────── -->
+        <div id="tab-content-estimate" class="tab-section transition-all duration-300">
+            
+            <!-- Hero Section -->
+            <section class="py-12 md:py-20 bg-transparent">
+                <div class="container-custom grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-8 text-center lg:text-left flex flex-col items-center lg:items-start">
+                        
+                        <!-- Hero Brand Logo - Prominent & Perfect Placement -->
+                        <div class="flex flex-col items-center lg:items-start gap-3">
+                            <img src="img_maintenance_mode_active.png.png" alt="RepairMaster Brand Logo" class="w-32 h-32 md:w-40 md:h-40 object-contain shadow-2xl rounded-3xl border-2 border-[#0f8b8d]/30 p-2.5 bg-slate-900/60" />
+                            <span class="text-xs md:text-sm font-black text-[#0f8b8d] tracking-widest uppercase mt-1">Direct To Consumer</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-black text-white leading-tight font-display">
+                                Fix Your Devices.<br class="hidden sm:inline" />
+                                <span class="text-[#0f8b8d] bg-gradient-to-r from-[#0f8b8d] to-[#14b8a6] bg-clip-text text-transparent">Hassle-Free.</span>
+                            </h1>
+                            <p class="text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                                Doorstep pickup, expert laboratory repair, and quick delivery in Wardha. Genuine spare parts, certified technicians, and full data privacy.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2 w-full sm:w-auto">
+                            <button onclick="navigateToTab('estimate', 'calculator-section')" class="btn-primary h-12 text-sm font-bold px-8 shadow-md w-full sm:w-auto">
+                                <i class="fa-solid fa-calculator mr-2"></i> Get an Estimate
+                            </button>
+                            <a href="signup.html" class="btn-outline h-12 text-sm font-bold px-8 w-full sm:w-auto">
+                                <i class="fa-solid fa-user-plus mr-2"></i> Sign Up
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- SVG Decorative Smartphone Vector Graphics (No external dependencies) -->
+                    <div class="lg:col-span-5 hidden lg:flex justify-center">
+                        <div class="relative w-80 h-[480px] bg-slate-900 rounded-[40px] p-3.5 shadow-2xl border-4 border-slate-800">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-2xl z-10"></div>
+                            <div class="relative w-full h-full bg-[#1e293b] rounded-[28px] overflow-hidden flex flex-col justify-between p-6">
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between text-white/55 text-xs">
+                                        <span>RM Diagnostics v2.0</span>
+                                        <i class="fa-solid fa-wifi"></i>
+                                    </div>
+                                    <div class="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-2">
+                                        <div class="flex justify-between text-[11px] text-[#14b8a6]">
+                                            <span>Hardware Test</span>
+                                            <span>PASS</span>
+                                        </div>
+                                        <div class="h-1.5 w-full bg-[#0a0f1d] rounded-full overflow-hidden">
+                                            <div class="h-full bg-gradient-to-r from-[#0f8b8d] to-[#14b8a6] w-full"></div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-2">
+                                        <div class="flex justify-between text-[11px] text-amber-400">
+                                            <span>Maintenance Mode</span>
+                                            <span>ENABLED</span>
+                                        </div>
+                                        <div class="h-1.5 w-full bg-[#0a0f1d] rounded-full overflow-hidden">
+                                            <div class="h-full bg-amber-400 w-3/4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center space-y-3">
+                                    <div class="w-16 h-16 rounded-full bg-[#0f8b8d]/20 border border-[#0f8b8d]/30 flex items-center justify-center mx-auto text-[#14b8a6] text-3xl">
+                                        <i class="fa-solid fa-circle-check animate-pulse"></i>
+                                    </div>
+                                    <p class="text-white font-extrabold text-sm">Smart Diagnostics</p>
+                                    <p class="text-white/60 text-xs">Sandbox Mode Is Active &amp; Protected</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Smart Repair Calculator Section -->
+            <section id="calculator-section" class="py-16 bg-slate-950/50 border-t border-slate-900/60">
+                <div class="container-custom max-w-4xl">
+                    <div class="text-center space-y-3 mb-10">
+                        <span class="inline-flex items-center gap-1.5 bg-[#0f8b8d]/15 text-[#0f8b8d] text-xs font-black px-3.5 py-1.5 rounded-full uppercase">
+                            <i class="fa-solid fa-calculator"></i> Smart Estimator
+                        </span>
+                        <h2 class="text-2xl md:text-3.5xl font-black text-white font-display">Get Your Accurate Estimate</h2>
+                        <p class="text-slate-300 text-sm max-w-xl mx-auto">
+                            No surprise fees. Calculate parts, service, and diagnostics costs instantly using verified Supabase pricing tables.
+                        </p>
+                        <p class="text-xs text-amber-400 font-bold"><i class="fa-solid fa-tag mr-1"></i> Special introductory discount included on all listings!</p>
+                    </div>
+                    
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Options Form block -->
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">1. Select Device Brand</label>
+                                    <select id="brandSelect" onchange="updateModels()" class="custom-select"></select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">2. Choose Smartphone Model</label>
+                                    <select id="modelSelect" onchange="updateRepairTypes()" class="custom-select">
+                                        <option value="">— Select Model —</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">3. Select Repair Type</label>
+                                    <select id="repairTypeSelect" onchange="updatePartsSurvey()" class="custom-select">
+                                        <option value="">— Select Repair —</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">4. Component Quality Grade</label>
+                                    <select id="tierInput" onchange="updatePartsSurvey()" class="custom-select">
+                                        <option value="premium" selected>Premium Grade Spares (OEM Equivalent Glass/OLED)</option>
+                                        <option value="standard">Standard Grade Spares (Affordable &amp; Durable)</option>
+                                        <option value="compatible">Compatible Grade Spares (Budget Friendly)</option>
+                                    </select>
+                                </div>
+                                <div class="bg-amber-500/5 border border-amber-500/15 p-3.5 rounded-xl flex items-center gap-3">
+                                    <input type="checkbox" id="offerToggle" onchange="updatePartsSurvey()" class="w-4.5 h-4.5 text-[#0f8b8d] border-slate-700 rounded focus:ring-[#0f8b8d] cursor-pointer" />
+                                    <label for="offerToggle" class="text-xs text-slate-300 font-semibold cursor-pointer select-none">
+                                        Apply active claim voucher? <span class="bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded ml-1.5">50% Off Service Fee</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Estimation Output block -->
+                            <div class="bg-slate-950/80 border border-slate-800 text-white rounded-2xl p-6 flex flex-col justify-between">
+                                <div class="space-y-4">
+                                    <h3 class="text-base font-bold flex items-center gap-2 border-b border-white/10 pb-3">
+                                        <i class="fa-solid fa-file-invoice-dollar text-[#14b8a6]"></i> Estimate Summary
+                                    </h3>
+                                    
+                                    <!-- Dynamic parts breakdown inside -->
+                                    <div id="partsSurveyContainer">
+                                        <div class="text-center text-white/40 py-4 text-xs font-medium">
+                                            <i class="fa-solid fa-circle-info mr-2"></i> Select dropdown options to display dynamic component breakdown.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-2.5 pt-4 border-t border-white/10 text-sm">
+                                        <div class="flex justify-between text-white/70">
+                                            <span>Discounted Parts:</span>
+                                            <span id="partsTotalDisplay" class="font-bold text-white">₹0.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-white/70">
+                                            <span>Service Charge (15%):</span>
+                                            <span id="serviceFeeDisplay" class="font-bold text-white">₹0.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-white/70">
+                                            <span>Diagnostic Visit Fee:</span>
+                                            <span id="diagnosisChargeDisplay" class="font-bold text-white">₹250.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center pt-3 border-t border-white/10 text-base font-black">
+                                            <span class="text-white">Total Estimate (INR):</span>
+                                            <span id="totalPriceDisplay" class="text-xl text-[#14b8a6]">₹250.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button id="bookServiceBtn" onclick="createOrder()" class="mt-6 w-full btn-primary h-12 text-sm font-bold rounded-xl flex items-center justify-center gap-2">
+                                    <i class="fa-regular fa-calendar-check"></i> Book Doorstep Service
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+
+        <!-- ────────────────────────────────────────────────── -->
+        <!--  TAB CONTENT: HOW IT WORKS                         -->
+        <!-- ────────────────────────────────────────────────── -->
+        <div id="tab-content-how-it-works" class="tab-section hidden transition-all duration-300">
+            
+            <section class="py-12 md:py-20 bg-transparent">
+                <div class="container-custom max-w-4xl">
+                    <div class="text-center space-y-3 mb-12">
+                        <span class="inline-flex items-center gap-1.5 bg-[#0f8b8d]/15 text-[#0f8b8d] text-xs font-black px-3.5 py-1.5 rounded-full uppercase">
+                            <i class="fa-solid fa-gears"></i> Seamless Process
+                        </span>
+                        <h2 class="text-2xl md:text-3.5xl font-black text-white font-display">How It Works</h2>
+                        <p class="text-slate-300 text-sm max-w-xl mx-auto">
+                            Three secure, transparent steps designed to give your smartphone premium service without leaving your room.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative mb-16">
+                        <!-- Connecting arrows on desktop -->
+                        <div class="hidden md:block absolute top-1/2 left-1/6 right-1/6 h-0.5 bg-slate-800 -z-10"></div>
+                        
+                        <!-- Step 1 -->
+                        <div class="card-white text-center flex flex-col justify-between h-full">
+                            <div class="space-y-4">
+                                <div class="w-16 h-16 rounded-full bg-[#0f8b8d]/10 text-[#0f8b8d] flex items-center justify-center text-3xl mx-auto shadow-md border border-[#0f8b8d]/25">
+                                    📦
+                                </div>
+                                <span class="text-[#0f8b8d] text-xs font-bold uppercase tracking-wider block">Step 1</span>
+                                <h3 class="text-base font-bold text-white">Free Doorstep Pickup</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Schedule a collection slot. Our verified logistic personnel collects your locked device securely using dynamic 6-digit handover codes.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="card-white text-center flex flex-col justify-between h-full">
+                            <div class="space-y-4">
+                                <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center text-3xl mx-auto shadow-md border border-amber-500/25">
+                                    🔬
+                                </div>
+                                <span class="text-amber-500 text-xs font-bold uppercase tracking-wider block">Step 2</span>
+                                <h3 class="text-base font-bold text-white">Laboratory Repair</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Technicians calibrate diagnostics under anti-static setups. Private data files remain isolated in secure sandbox partitions.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="card-white text-center flex flex-col justify-between h-full">
+                            <div class="space-y-4">
+                                <div class="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-3xl mx-auto shadow-md border border-emerald-500/25">
+                                    🚀
+                                </div>
+                                <span class="text-emerald-500 text-xs font-bold uppercase tracking-wider block">Step 3</span>
+                                <h3 class="text-base font-bold text-white">Doorstep Delivery</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Get your phone delivered back. Perform on-the-spot touch/calibration checks, then complete safe escrow transaction payouts.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Coverage and Privacy Isolation Banners -->
+                    <div class="space-y-6 pt-4 border-t border-slate-900">
+                        <div class="bg-teal-950/20 border border-teal-500/20 rounded-2xl p-4 flex items-center gap-3.5">
+                            <div class="text-2xl text-[#0f8b8d] shrink-0">📍</div>
+                            <p class="text-xs md:text-sm text-slate-300">
+                                <strong>Currently serving Wardha City</strong> — Nagpur &amp; Amravati regional satellite operations are coming up shortly!
+                            </p>
+                        </div>
+                        
+                        <div class="bg-amber-950/20 border border-amber-500/20 rounded-2xl p-5 text-left space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="text-2xl shrink-0">🔒</div>
+                                <h4 class="font-extrabold text-white text-sm md:text-base font-display">Maintenance Mode Active Guarantee</h4>
+                            </div>
+                            <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+                                To protect your private files, chats, bank logins, and media, our technicians enforce strict <strong>Maintenance Sandbox Mode</strong> locks on active pickups. No passwords needed. For <em>Dead Phones</em> or <em>Blank Screens</em>, isolation is verified physically in the high-security diagnostics cage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+
+        <!-- ────────────────────────────────────────────────── -->
+        <!--  TAB CONTENT: WHY US                               -->
+        <!-- ────────────────────────────────────────────────── -->
+        <div id="tab-content-why-us" class="tab-section hidden transition-all duration-300">
+            
+            <section class="py-12 md:py-20 bg-transparent">
+                <div class="container-custom max-w-4xl">
+                    <div class="text-center space-y-3 mb-12">
+                        <span class="inline-flex items-center gap-1.5 bg-[#0f8b8d]/15 text-[#0f8b8d] text-xs font-black px-3.5 py-1.5 rounded-full uppercase">
+                            <i class="fa-solid fa-circle-question"></i> Platform Advantages
+                        </span>
+                        <h2 class="text-2xl md:text-3.5xl font-black text-white font-display">The RepairMaster Advantage</h2>
+                        <p class="text-slate-300 text-sm max-w-xl mx-auto">
+                            Engineered for absolute trust, rapid response, and uncompromised privacy.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+                        <!-- Benefit 1 -->
+                        <div class="card-white flex gap-4 items-start">
+                            <span class="text-3xl shrink-0">👨‍💻</span>
+                            <div class="space-y-1.5">
+                                <h3 class="text-base font-bold text-white">Certified Technicians</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Micro-soldering, layer diagnostics, and screen repair completed by certified tech specialists inside dust-free laboratory workstations.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Benefit 2 -->
+                        <div class="card-white flex gap-4 items-start">
+                            <span class="text-3xl shrink-0">🔌</span>
+                            <div class="space-y-1.5">
+                                <h3 class="text-base font-bold text-white">Genuine Spare Parts</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    We maintain an automated catalog of certified standard and premium spares, ensuring authentic replacements.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Benefit 3 -->
+                        <div class="card-white flex gap-4 items-start">
+                            <span class="text-3xl shrink-0">📊</span>
+                            <div class="space-y-1.5">
+                                <h3 class="text-base font-bold text-white">Transparent Escrow</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Review detailed breakdowns, approve custom technician estimates on your client portal, and release payouts on delivery.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Benefit 4 -->
+                        <div class="card-white flex gap-4 items-start">
+                            <span class="text-3xl shrink-0">🛡️</span>
+                            <div class="space-y-1.5">
+                                <h3 class="text-base font-bold text-white">90-Day Warranty</h3>
+                                <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                    Every single screen, charging board, and battery replacement carries our ironclad 90-day parts and labor warranty.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guest Quick Status Tracker Form -->
+                    <div class="bg-slate-900/90 border border-slate-800 text-white rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-16 -top-16 w-48 h-48 bg-[#0f8b8d]/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="max-w-xl space-y-2 relative z-10 mb-6">
+                            <span class="inline-flex items-center gap-1.5 bg-[#0f8b8d]/20 text-[#14b8a6] text-xs font-black px-3 py-1 rounded-full uppercase">
+                                <i class="fa-solid fa-magnifying-glass"></i> Live Request Search
+                            </span>
+                            <h3 class="text-lg md:text-xl font-bold font-display text-white">Instant Guest Tracker (No Password Required)</h3>
+                            <p class="text-white/60 text-xs">
+                                Submitted a request? Simply input your Reference Ticket ID (#RM-REQ-...) and registered mobile number to check real-time courier dispatch status, review estimates, or verify security OTPs.
+                            </p>
+                        </div>
+                        
+                        <form id="guestTrackForm" onsubmit="trackOrderGuest(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10">
+                            <div>
+                                <label class="block text-[10px] text-white/50 font-bold uppercase tracking-wider mb-1.5">Reference ID / Ticket No</label>
+                                <input type="text" id="trackOrderId" placeholder="e.g. RM-REQ-JXK3D9" required class="w-full bg-slate-950 border border-slate-850 p-3 rounded-xl text-xs text-white focus:border-[#14b8a6] outline-none" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-white/50 font-bold uppercase tracking-wider mb-1.5">Registered Mobile Number</label>
+                                <input type="tel" id="trackPhone" placeholder="e.g. 9876543210" required class="w-full bg-slate-950 border border-slate-850 p-3 rounded-xl text-xs text-white focus:border-[#14b8a6] outline-none" />
+                            </div>
+                            <div class="flex items-end">
+                                <button type="submit" class="w-full btn-primary h-11 text-xs font-bold rounded-xl flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-route"></i> Search &amp; Track Live
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Guest Tracking Result Container -->
+                        <div id="guestTrackResult" class="hidden mt-6 border-t border-slate-850 pt-6"></div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+
+        <!-- ────────────────────────────────────────────────── -->
+        <!--  TAB CONTENT: MARKETPLACE                          -->
+        <!-- ────────────────────────────────────────────────── -->
+        <div id="tab-content-marketplace" class="tab-section hidden transition-all duration-300 bg-slate-950/80 text-white py-16 md:py-24">
+            <div class="container-custom max-w-3xl text-center space-y-8">
+                <!-- Large store icon -->
+                <div class="w-24 h-24 rounded-full bg-[#0f8b8d]/20 text-[#14b8a6] flex items-center justify-center text-4xl mx-auto shadow-2xl border border-[#0f8b8d]/30">
+                    🏪
+                </div>
+                
+                <div class="space-y-4">
+                    <span class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest">
+                        <i class="fa-solid fa-clock animate-pulse"></i> Launching Soon
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-black font-display tracking-tight text-white">
+                        Pre-Owned <span class="text-[#0f8b8d]">Marketplace</span>
+                    </h2>
+                    <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
+                        We are currently calibrating and certifying our initial inventory. Our upcoming direct-to-consumer store will feature rigorously tested, green-grade pre-owned devices with a 90-day warranty.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 max-w-md mx-auto space-y-4">
+                    <h4 class="text-sm font-extrabold text-[#14b8a6] uppercase tracking-wider">Get Notified On Launch</h4>
+                    <p class="text-xs text-slate-400">Be the first to know when certified devices are listed in Wardha Hub.</p>
+                    <div class="flex gap-2">
+                        <input id="notif-email" type="email" placeholder="Enter your email" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white focus:border-[#0f8b8d] outline-none" />
+                        <button onclick="handleNotifyMe()" class="btn-primary py-2 px-4 rounded-xl min-h-0 text-xs whitespace-nowrap">Notify Me</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────── -->
+        <!--  TAB CONTENT: ABOUT                                -->
+        <!-- ────────────────────────────────────────────────── -->
+        <div id="tab-content-about" class="tab-section hidden transition-all duration-300">
+            
+            <!-- Testimonials -->
+            <section class="py-12 md:py-16 bg-transparent">
+                <div class="container-custom max-w-4xl">
+                    <div class="text-center space-y-3 mb-10">
+                        <span class="inline-flex items-center gap-1.5 bg-[#0f8b8d]/15 text-[#0f8b8d] text-xs font-black px-3.5 py-1.5 rounded-full uppercase">
+                            <i class="fa-solid fa-heart"></i> Client Testimonials
+                        </span>
+                        <h2 class="text-2xl md:text-3.5xl font-black text-white font-display">What Our Users Say</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Card 1 -->
+                        <div class="card-white flex flex-col justify-between">
+                            <p class="text-slate-300 text-xs md:text-sm italic leading-relaxed mb-4">
+                                "The estimate tool gave me the exact quote. No hidden charges! Pickup boy verified my IMEI with an OTP handover. Got my screen repaired with pristine lamination."
+                            </p>
+                            <div>
+                                <div class="text-amber-500 text-[10px] mb-1.5">⭐⭐⭐⭐⭐</div>
+                                <strong class="text-white text-xs block">Amit S.</strong>
+                                <span class="text-slate-400 text-[10px]">Wardha Customer</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="card-white flex flex-col justify-between">
+                            <p class="text-slate-300 text-xs md:text-sm italic leading-relaxed mb-4">
+                                "Outstanding privacy management. They locked my WhatsApp and emails under Maintenance Mode before decoupling the battery pins. Absolute peace of mind!"
+                            </p>
+                            <div>
+                                <div class="text-amber-500 text-[10px] mb-1.5">⭐⭐⭐⭐⭐</div>
+                                <strong class="text-white text-xs block">Priyanka D.</strong>
+                                <span class="text-slate-400 text-[10px]">Sevagram Customer</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 3 -->
+                        <div class="card-white flex flex-col justify-between">
+                            <p class="text-slate-300 text-xs md:text-sm italic leading-relaxed mb-4">
+                                "Secure Escrow is phenomenal. I locked my UPI deposit on my tracking portal and only released the code after reviewing display responsiveness. Fantastic idea!"
+                            </p>
+                            <div>
+                                <div class="text-amber-500 text-[10px] mb-1.5">⭐⭐⭐⭐⭐</div>
+                                <strong class="text-white text-xs block">Vikram R.</strong>
+                                <span class="text-slate-400 text-[10px]">Hinganghat Customer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Brand block & Final CTA -->
+            <section class="py-12 bg-slate-950/50 border-t border-slate-900/60">
+                <div class="container-custom max-w-4xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8">
+                        <div class="space-y-4 text-center md:text-left">
+                            <h3 class="text-xl font-extrabold text-white font-display">Our Mission &amp; Engineering</h3>
+                            <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
+                                RepairMaster is a state-of-the-art Direct-to-Consumer repair companion. Built using secure PostgreSQL backends, automated inventory catalog matching, and OTP courier handshakes to bring transparency to hardware servicing.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 text-center space-y-4">
+                            <h4 class="text-sm font-bold text-white">Schedule Premium Service Now</h4>
+                            <p class="text-slate-300 text-[11px]">Free pickup &amp; delivery with Maintenance Mode guarantee.</p>
+                            <div class="flex flex-col gap-2.5">
+                                <button onclick="navigateToTab('estimate', 'calculator-section')" class="w-full btn-primary py-2.5 rounded-xl text-xs font-bold">
+                                    <i class="fa-solid fa-calculator mr-1.5"></i> Get Free Estimate
+                                </button>
+                                <a href="signup.html" class="w-full btn-outline py-2 rounded-xl text-xs font-bold">
+                                    <i class="fa-solid fa-user-plus mr-1.5"></i> Sign Up
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+
+    </main>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  GLOBAL FOOTER                                      -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <footer class="border-t border-slate-900 bg-slate-950/95 py-12 pb-24 md:pb-12 text-sm text-slate-400">
+        <div class="container-custom grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="rm-logo w-9 h-9"></div>
+                    <span class="font-extrabold text-white text-base font-display">RepairMaster</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Premium smartphone doorstep and certified laboratory repair system. Engineered for speed, strict data privacy, and full financial security.
+                </p>
+                <div class="flex items-center gap-3.5 text-slate-500 text-base pt-1">
+                    <a href="#" class="hover:text-[#0f8b8d]"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-[#0f8b8d]"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-[#0f8b8d]"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-[#0f8b8d]"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+                <p class="text-[10px] text-slate-500">© 2026 RepairMaster. All rights reserved.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-extrabold text-white mb-4 uppercase text-[11px] tracking-wider">Our Hub Locations</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><span class="text-[#0f8b8d] font-bold"><i class="fa-solid fa-location-dot mr-1"></i> Wardha Hub</span> (Fully Active)</li>
+                    <li class="text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-slate-600"></i> Nagpur Hub (Coming soon)</li>
+                    <li class="text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-slate-600"></i> Amravati Hub (Coming soon)</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-extrabold text-white mb-4 uppercase text-[11px] tracking-wider">Quick Navigation</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="request.html" class="hover:text-[#0f8b8d] transition"><i class="fa-regular fa-file-lines mr-1.5 text-[#0f8b8d]"></i> Submit Repair Request</a></li>
+                    <li><a href="dashboard.html" class="hover:text-[#0f8b8d] transition"><i class="fa-solid fa-chart-line mr-1.5 text-[#0f8b8d]"></i> Customer Dashboard</a></li>
+                    <li><a href="marketplace.html" class="hover:text-[#0f8b8d] transition"><i class="fa-solid fa-store mr-1.5 text-[#0f8b8d]"></i> Pre-Owned Marketplace</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-extrabold text-white mb-4 uppercase text-[11px] tracking-wider">Contact & Support</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                    RepairMaster platform is powered by CM2US Direct DTC smartphone restoration networks.
+                </p>
+                <div class="text-xs text-slate-200 font-bold"><i class="fa-solid fa-phone text-[#0f8b8d] mr-2"></i> +91 99999 99999</div>
+                <div class="text-xs text-slate-200 font-bold mt-1"><i class="fa-solid fa-envelope text-[#0f8b8d] mr-2"></i> support@cm2us.com</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Tab Bar Navigator -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-slate-950/95 border-t border-slate-900 backdrop-blur-lg flex justify-around py-3 z-50 text-center font-display shadow-lg">
+        <button onclick="switchTab('estimate')" class="flex flex-col items-center text-[10px] text-slate-400 hover:text-[#0f8b8d] focus:outline-none">
+            <i class="fa-solid fa-house text-base mb-1 text-slate-400"></i>
+            <span>Home</span>
+        </button>
+        <a href="request.html" class="flex flex-col items-center text-[10px] text-slate-400 hover:text-[#0f8b8d]">
+            <i class="fa-solid fa-screwdriver-wrench text-base mb-1"></i>
+            <span>Request</span>
+        </a>
+        <a href="dashboard.html" class="flex flex-col items-center text-[10px] text-slate-400 hover:text-[#0f8b8d]">
+            <i class="fa-solid fa-chart-simple text-base mb-1"></i>
+            <span>Hub</span>
+        </a>
+        <button onclick="switchTab('marketplace')" class="flex flex-col items-center text-[10px] text-slate-400 hover:text-[#0f8b8d] focus:outline-none">
+            <i class="fa-solid fa-store text-base mb-1"></i>
+            <span>Store</span>
+        </button>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="fixed bottom-20 md:bottom-8 right-8 z-50 px-6 py-4 rounded-xl font-bold text-sm shadow-xl max-w-md pointer-events-none opacity-0 translate-y-8 transition-all duration-500"></div>
+
+    <!-- Embedded Tab Switching & Routing Logic -->
+    <script>
+        function switchTab(tabId) {
+            // List of all homepage tabs
+            const tabs = ['estimate', 'how-it-works', 'why-us', 'marketplace', 'about'];
+            
+            tabs.forEach(t => {
+                const el = document.getElementById('tab-content-' + t);
+                if (el) el.classList.add('hidden');
+                
+                const btn = document.getElementById('tab-btn-' + t);
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.classList.remove('bg-[#0f8b8d]', 'text-white', 'shadow-md');
+                    btn.classList.add('bg-transparent', 'text-slate-400');
+                }
+            });
+            
+            // Activate selected tab content
+            const activeEl = document.getElementById('tab-content-' + tabId);
+            if (activeEl) {
+                activeEl.classList.remove('hidden');
+            }
+            
+            // Activate tab button styling
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'bg-[#0f8b8d]', 'text-white', 'shadow-md');
+                activeBtn.classList.remove('bg-transparent', 'text-slate-400');
+            }
+            
+            // Smoothly auto-scroll to the tab container on mobile
+            const tabContainer = document.getElementById('tab-navigation-bar');
+            if (tabContainer) {
+                const yOffset = -70; // Header height offset
+                const y = tabContainer.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+        
+        function navigateToTab(tabId, elementId) {
+            switchTab(tabId);
+            if (elementId) {
+                setTimeout(() => {
+                    const el = document.getElementById(elementId);
+                    if (el) {
+                        const yOffset = -140; // Account for fixed header + sticky tab bar
+                        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                }, 150);
+            }
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check hash links to auto-route tabs on landing
+            const hash = window.location.hash;
+            if (hash === '#calculator-section') {
+                navigateToTab('estimate', 'calculator-section');
+            } else if (hash === '#marketplace-section') {
+                navigateToTab('marketplace', 'marketplace-section');
+            } else {
+                switchTab('estimate');
+            }
+        });
+
+        function toggleSupportChat() {
+            const windowEl = document.getElementById('support-chat-window');
+            const iconEl = document.getElementById('support-chat-icon');
+            if (windowEl.classList.contains('hidden')) {
+                windowEl.classList.remove('hidden');
+                setTimeout(() => {
+                    windowEl.classList.remove('translate-y-4', 'opacity-0');
+                }, 50);
+                iconEl.className = 'fa-solid fa-comments text-xl';
+            } else {
+                windowEl.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => {
+                    windowEl.classList.add('hidden');
+                }, 300);
+                iconEl.className = 'fa-solid fa-headset text-xl';
+            }
+        }
+
+        function appendSupportMessage(text, isUser) {
+            const container = document.getElementById('support-chat-messages');
+            if (!container) return;
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex gap-2 items-start ' + (isUser ? 'justify-end' : '');
+            
+            if (isUser) {
+                msgDiv.innerHTML = `
+                    <div class="bg-[#0f8b8d] text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
+                        <p class="font-semibold text-xs">${text}</p>
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-7 h-7 rounded-full bg-[#0f8b8d]/15 flex items-center justify-center text-[#0f8b8d] shrink-0 font-bold text-[10px]">RM</div>
+                    <div class="bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] border border-slate-700">
+                        <p class="text-white text-xs">${text}</p>
+                    </div>
+                `;
+            }
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendQuickSupportMessage(question) {
+            appendSupportMessage(question, true);
+            generateSupportResponse(question);
+        }
+
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('support-chat-input');
+            const query = input.value.trim();
+            if (!query) return;
+
+            appendSupportMessage(query, true);
+            input.value = '';
+            generateSupportResponse(query);
+        }
+
+        function generateSupportResponse(query) {
+            const container = document.getElementById('support-chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'support-typing-indicator';
+            typingDiv.className = 'flex gap-2 items-start';
+            typingDiv.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-[#0f8b8d]/15 flex items-center justify-center text-[#0f8b8d] shrink-0 font-bold text-[10px]">RM</div>
+                <div class="bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-700 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                const indicator = document.getElementById('support-typing-indicator');
+                if (indicator) indicator.remove();
+
+                const normalized = query.toLowerCase();
+                let answer = "Thank you for reaching out! A repair specialist is being connected. In the meantime, feel free to calculate an estimate on the Home tab, or book from the Request tab.";
+
+                if (normalized.includes('doorstep') || normalized.includes('book') || normalized.includes('how to')) {
+                    answer = "Booking is easy! Use the **Smart Estimator** on our Home page to calculate parts & service, then click **Book Doorstep Service** to proceed to checkout.";
+                } else if (normalized.includes('privacy') || normalized.includes('sandbox') || normalized.includes('maintenance')) {
+                    answer = "Data security is our top priority! We implement **Maintenance Sandbox Mode** which locks your WhatsApp, emails, gallery, and logins during courier transit.";
+                } else if (normalized.includes('warranty') || normalized.includes('spares') || normalized.includes('genuine')) {
+                    answer = "All components are certified OEM-grade. We stand behind our work with a full **90-Day Ironclad Warranty** covering both spare parts and labor.";
+                } else if (normalized.includes('location') || normalized.includes('wardha') || normalized.includes('nagpur')) {
+                    answer = "We are fully active inside **Wardha City** (including Sewagram and Hinganghat regions). Expanding to Nagpur and Amravati soon!";
+                }
+
+                appendSupportMessage(answer, false);
+            }, 1000);
+        }
+
+        function handleNotifyMe() {
+            const input = document.getElementById('notif-email');
+            const email = input ? input.value.trim() : '';
+            if (!email) return;
+            showToast('Thank you! We will notify you at ' + email + ' once the marketplace launches.', 'success');
+            if (input) input.value = '';
+        }
+    </script>
+
+    <!-- Floating Interactive RepairMaster Support Assistant Widget -->
+    <div id="ai-support-widget" class="fixed bottom-24 md:bottom-8 right-6 z-50 flex flex-col items-end">
+        <!-- Chat Window (initially hidden) -->
+        <div id="support-chat-window" class="hidden w-80 md:w-96 h-[450px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 flex flex-col overflow-hidden transition-all duration-300 transform translate-y-4 opacity-0 mb-4 text-white">
+            <!-- Chat Header -->
+            <div class="bg-[#0f8b8d] p-4 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <div>
+                        <h4 class="font-bold text-xs tracking-wide text-white">RepairMaster Support</h4>
+                        <span class="text-[9px] text-teal-100 font-medium">Typically responds instantly</span>
+                    </div>
+                </div>
+                <button onclick="toggleSupportChat()" class="text-white hover:text-teal-200 transition text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="support-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950">
+                <!-- Welcome Message -->
+                <div class="flex gap-2 items-start">
+                    <div class="w-7 h-7 rounded-full bg-[#0f8b8d]/15 flex items-center justify-center text-[#0f8b8d] shrink-0 font-bold text-[10px]">RM</div>
+                    <div class="bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] border border-slate-700 text-white">
+                        <p class="text-xs">Hello! Welcome to RepairMaster diagnostics. How can we help you restore your device today?</p>
+                        <div class="mt-2.5 flex flex-wrap gap-1.5">
+                            <button onclick="sendQuickSupportMessage('How to book doorstep repair?')" class="bg-slate-900 hover:bg-teal-950 hover:text-[#0f8b8d] transition border border-slate-800 hover:border-teal-900 px-2.5 py-1.5 rounded-full text-[9px] font-semibold text-slate-300">Doorstep Repair</button>
+                            <button onclick="sendQuickSupportMessage('What is Maintenance Sandbox Mode?')" class="bg-slate-900 hover:bg-teal-950 hover:text-[#0f8b8d] transition border border-slate-800 hover:border-teal-900 px-2.5 py-1.5 rounded-full text-[9px] font-semibold text-slate-300">Sandbox Security</button>
+                            <button onclick="sendQuickSupportMessage('Warranty & spares authenticity')" class="bg-slate-900 hover:bg-teal-950 hover:text-[#0f8b8d] transition border border-slate-800 hover:border-teal-900 px-2.5 py-1.5 rounded-full text-[9px] font-semibold text-slate-300">Warranty details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input form -->
+            <form id="support-chat-form" onsubmit="handleSupportSubmit(event)" class="border-t border-slate-850 p-3 bg-slate-900 flex gap-2">
+                <input type="text" id="support-chat-input" placeholder="Type your message..." required class="flex-1 bg-slate-950 border border-slate-850 rounded-xl px-3.5 py-2 text-xs text-white focus:border-[#0f8b8d] outline-none" />
+                <button type="submit" class="bg-[#0f8b8d] hover:bg-[#0c6e70] text-white rounded-xl w-10 h-10 flex items-center justify-center transition shrink-0">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Floating Chat Icon -->
+        <button onclick="toggleSupportChat()" class="w-14 h-14 rounded-full bg-[#0f8b8d] hover:bg-[#0c6e70] text-white flex items-center justify-center shadow-2xl transition hover:scale-110 active:scale-95 focus:outline-none border-2 border-white/20">
+            <i id="support-chat-icon" class="fa-solid fa-headset text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Supabase SDK JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <!-- Static repair pricing data (replaces Supabase parts_pricing table for the calculator) -->
+    <script src="repair-data.js"></script>
+    <!-- Multi-Page App Logic Controller -->
+    <script src="main.js"></script>
+
+    <!-- Custom Override Logic & Mobile Drawer Sync -->
+<script>
+    // Background Slideshow Cycling Engine
+    let currentBgSlide = 1;
+    const totalBgSlides = 5;
+    function cycleBgSlides() {
+        for (let i = 1; i <= totalBgSlides; i++) {
+            const el = document.getElementById('bg-slide-' + i);
+            if (el) {
+                if (i === currentBgSlide) {
+                    el.classList.remove('opacity-0');
+                    el.classList.add('opacity-100');
+                } else {
+                    el.classList.remove('opacity-100');
+                    el.classList.add('opacity-0');
+                }
+            }
+        }
+        currentBgSlide = (currentBgSlide % totalBgSlides) + 1;
+    }
+
+    // Initialize background slideshow
+    cycleBgSlides();
+    setInterval(cycleBgSlides, 5000);
+
+    // ─── TEXT‑BASED CALCULATOR (NO IDS) ───
+    let isInitialLoad = true;
+
+    // Hardcoded fallback brands (in case Supabase fails)
+    const FALLBACK_BRANDS = [
+        'Apple', 'Samsung', 'OnePlus', 'Xiaomi', 'Vivo', 'Oppo',
+        'Realme', 'Google', 'Nothing', 'Infinix', 'Tecno',
+        'Motorola', 'Lava', 'Micromax', 'Nokia'
+    ];
+
+    async function populateBrands() {
+        const select = document.getElementById('brandSelect');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Loading brands...</option>';
+
+        try {
+            const { data, error } = await supabase
+                .from('parts_pricing')
+                .select('brand', { distinct: true })
+                .order('brand');
+
+            if (error) throw error;
+
+            const brandSet = new Set();
+            data.forEach(item => {
+                if (item.brand) brandSet.add(item.brand.trim());
+            });
+
+            // If Supabase returns nothing, use fallback
+            if (brandSet.size === 0) {
+                FALLBACK_BRANDS.forEach(b => brandSet.add(b));
+            }
+
+            const uniqueBrands = [...brandSet].sort();
+
+            select.innerHTML = '<option value="">— Select Brand —</option>';
+            if (uniqueBrands.length > 0) {
+                uniqueBrands.forEach(brand => {
+                    const opt = document.createElement('option');
+                    opt.value = brand;
+                    opt.textContent = brand;
+                    if (isInitialLoad && brand === 'Apple') opt.selected = true;
+                    select.appendChild(opt);
+                });
+            } else {
+                select.innerHTML = '<option value="">No brands available</option>';
+            }
+        } catch (err) {
+            console.error('Error fetching brands:', err);
+            // Fallback to hardcoded list
+            select.innerHTML = '<option value="">— Select Brand —</option>';
+            FALLBACK_BRANDS.forEach(brand => {
+                const opt = document.createElement('option');
+                opt.value = brand;
+                opt.textContent = brand;
+                if (isInitialLoad && brand === 'Apple') opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        await updateModels();
+    }
+
+    async function updateModels() {
+        const brandSelect = document.getElementById('brandSelect');
+        const modelSelect = document.getElementById('modelSelect');
+        if (!modelSelect) return;
+
+        const brand = brandSelect?.value || '';
+        modelSelect.innerHTML = '<option value="">Loading models...</option>';
+
+        if (!brand) {
+            modelSelect.innerHTML = '<option value="">— Select Model —</option>';
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('parts_pricing')
+                .select('model', { distinct: true })
+                .eq('brand', brand)
+                .order('model');
+
+            if (error) throw error;
+
+            const modelSet = new Set();
+            data.forEach(item => { if (item.model) modelSet.add(item.model.trim()); });
+            const uniqueModels = [...modelSet].sort();
+
+            modelSelect.innerHTML = '<option value="">— Select Model —</option>';
+            if (uniqueModels.length > 0) {
+                uniqueModels.forEach(model => {
+                    const opt = document.createElement('option');
+                    opt.value = model;
+                    opt.textContent = model;
+                    if (isInitialLoad && model.includes('iPhone 13')) opt.selected = true;
+                    modelSelect.appendChild(opt);
+                });
+                if (isInitialLoad && modelSelect.options.length > 1) {
+                    if (!modelSelect.options[1].selected) modelSelect.options[1].selected = true;
+                    isInitialLoad = false;
+                }
+            } else {
+                modelSelect.innerHTML = '<option value="">No models available</option>';
+            }
+        } catch (err) {
+            console.error('Error fetching models:', err);
+            modelSelect.innerHTML = '<option value="">Error loading models</option>';
+        }
+
+        if (typeof updateRepairTypes === 'function') {
+            updateRepairTypes();
+        }
+    }
+
+    async function updateRepairTypes() {
+        const brandSelect = document.getElementById('brandSelect');
+        const modelSelect = document.getElementById('modelSelect');
+        const repairSelect = document.getElementById('repairTypeSelect');
+        if (!repairSelect) return;
+
+        const brand = brandSelect?.value || '';
+        const model = modelSelect?.value || '';
+
+        repairSelect.innerHTML = '<option value="">Loading repair types...</option>';
+
+        try {
+            let query = supabase.from('parts_pricing').select('issue_type', { distinct: true });
+            if (brand) query = query.eq('brand', brand);
+            if (model) query = query.eq('model', model);
+            const { data, error } = await query.order('issue_type');
+
+            if (error) throw error;
+
+            const typeSet = new Set();
+            data.forEach(item => { if (item.issue_type) typeSet.add(item.issue_type.trim()); });
+            const uniqueTypes = [...typeSet].sort();
+
+            repairSelect.innerHTML = '<option value="">— Select Repair —</option>';
+            if (uniqueTypes.length > 0) {
+                uniqueTypes.forEach(type => {
+                    const opt = document.createElement('option');
+                    opt.value = type;
+                    opt.textContent = type;
+                    repairSelect.appendChild(opt);
+                });
+            } else {
+                repairSelect.innerHTML = '<option value="">No repair types available</option>';
+            }
+        } catch (err) {
+            console.error('Error fetching repair types:', err);
+            repairSelect.innerHTML = '<option value="">Error loading repair types</option>';
+        }
+    }
+
+    async function calculateEstimate() {
+        const brand = document.getElementById('brandSelect')?.value || '';
+        const model = document.getElementById('modelSelect')?.value || '';
+        const issueType = document.getElementById('repairTypeSelect')?.value || '';
+        const tier = document.getElementById('tierInput')?.value || 'Standard (HQ)';
+        const surveyContainer = document.getElementById('partsSurveyContainer');
+
+        if (!brand || !model || !issueType) {
+            if (surveyContainer) {
+                surveyContainer.innerHTML = `
+                    <div class="text-center text-white/40 py-4 text-xs font-medium">
+                        <i class="fa-solid fa-circle-info mr-2"></i> Select all options to see the estimate.
+                    </div>
+                `;
+            }
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('parts_pricing')
+                .select('part_name, price, labor, warranty, turnaround, source_hub')
+                .eq('brand', brand)
+                .eq('model', model)
+                .eq('issue_type', issueType)
+                .eq('tier', tier);
+
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                const row = data[0];
+                const price = parseFloat(row.price) || 0;
+                const labor = parseFloat(row.labor) || Math.round(price * 0.20);
+                const total = price + labor;
+
+                let metaHtml = '';
+                if (row.warranty && row.warranty !== 'N/A') {
+                    metaHtml += `<div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">🛡️ Warranty:</span>
+                                    <span class="text-white font-semibold">${row.warranty}</span>
+                                </div>`;
+                }
+                if (row.turnaround && row.turnaround !== 'N/A') {
+                    metaHtml += `<div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">⚡ Turnaround:</span>
+                                    <span class="text-white font-semibold">${row.turnaround}</span>
+                                </div>`;
+                }
+                if (row.source_hub && row.source_hub !== 'N/A') {
+                    metaHtml += `<div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                                    <span class="text-slate-400">📍 Source Hub:</span>
+                                    <span class="text-white font-semibold">${row.source_hub}</span>
+                                </div>`;
+                }
+
+                surveyContainer.innerHTML = `
+                    <div class="bg-slate-900/40 border border-slate-800 rounded-xl p-4 space-y-2 text-left">
+                        <p class="text-xs font-bold text-teal-400 mb-2.5 uppercase tracking-wider">Part & Service Details</p>
+                        <div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                            <span class="text-slate-400">Part Name</span>
+                            <span class="text-white font-bold">${row.part_name || 'N/A'}</span>
+                        </div>
+                        <div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                            <span class="text-slate-400">Part Price</span>
+                            <span class="text-white font-bold">₹${price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        </div>
+                        <div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                            <span class="text-slate-400">Labor</span>
+                            <span class="text-white font-bold">₹${labor.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        </div>
+                        ${metaHtml}
+                        <div class="flex justify-between text-xs py-1 border-b border-white/5 pb-2">
+                            <span class="text-slate-400">Total Estimate</span>
+                            <span class="text-white font-bold text-base">₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('partsTotalDisplay').textContent = '₹' + price.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                document.getElementById('serviceFeeDisplay').textContent = '₹' + labor.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                document.getElementById('diagnosisChargeDisplay').textContent = '₹0.00';
+                document.getElementById('totalPriceDisplay').textContent = '₹' + total.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+            } else {
+                surveyContainer.innerHTML = `
+                    <div class="bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs p-4 rounded-xl text-center">
+                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i> No pricing available for this combination.
+                    </div>
+                `;
+            }
+        } catch (err) {
+            console.error('Error calculating estimate:', err);
+            surveyContainer.innerHTML = `
+                <div class="text-center text-red-400 text-xs p-2">Error loading estimate. Please try again.</div>
+            `;
+        }
+    }
+
+    // ─── Expose to global scope ───
+    window.populateBrands = populateBrands;
+    window.updateModels = updateModels;
+    window.updateRepairTypes = updateRepairTypes;
+    window.calculateEstimate = calculateEstimate;
+
+    // ─── On page load, populate brands ───
+    document.addEventListener('DOMContentLoaded', function() {
+        populateBrands();
+    });
+
+    // ─── Custom Mobile Slide‑out Navigation Drawer ───
+    async function toggleMobileMenu() {
+        let mobileDrawer = document.getElementById('mobileNavDrawer');
+        if (!mobileDrawer) {
+            mobileDrawer = document.createElement('div');
+            mobileDrawer.id = 'mobileNavDrawer';
+            mobileDrawer.className = 'fixed inset-0 z-50 hidden';
+            document.body.appendChild(mobileDrawer);
+        }
+
+        let user = null;
+        try {
+            if (window.supabase) {
+                const { data } = await supabase.auth.getUser();
+                if (data && data.user) {
+                    user = data.user;
+                }
+            }
+        } catch (e) {
+            console.warn("Could not retrieve user state:", e);
+        }
+
+        let authBlockHtml = '';
+        if (user) {
+            const username = user.user_metadata?.full_name || user.email.split('@')[0];
+            const email = user.email;
+            const initials = username.substring(0, 2).toUpperCase();
+
+            let roles = [];
+            try {
+                roles = await getAllUserRoles(user.id);
+            } catch (e) {
+                console.warn(e);
+            }
+            const activeRole = localStorage.getItem('activeRole') || roles[0] || 'customer';
+
+            let roleSwitcherHtml = '';
+            if (roles.length > 1) {
+                roleSwitcherHtml = `
+                    <div class="w-full mb-3">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1.5 text-center">Active Role Switcher</label>
+                        <select onchange="changeActiveRole(this.value)" class="w-full bg-slate-900 border border-slate-700 text-teal-400 text-xs font-black rounded-xl py-2.5 px-3 outline-none focus:border-teal-400 text-center uppercase cursor-pointer">
+                            ${roles.map(r => `<option value="${r}" ${r === activeRole ? 'selected' : ''}>${r.toUpperCase()}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            }
+
+            authBlockHtml = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-900 border border-slate-800">
+                        <div class="w-11 h-11 rounded-full bg-teal-500/10 border-2 border-teal-500/35 text-teal-400 font-extrabold text-sm flex items-center justify-center shrink-0 shadow-lg shadow-teal-500/5">
+                            ${initials}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-black text-white truncate">${username}</p>
+                            <p class="text-[10px] text-slate-400 truncate">${email}</p>
+                        </div>
+                    </div>
+                    ${roleSwitcherHtml}
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="toggleProfileDrawer(); toggleMobileMenu();" class="bg-slate-900 border border-slate-850 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                            <i class="fa-regular fa-user text-[#0f8b8d]"></i> Profile
+                        </button>
+                        <button onclick="logoutUser(); toggleMobileMenu();" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            authBlockHtml = `
+                <div class="flex flex-col gap-2.5">
+                    <a href="login.html" class="w-full bg-[#0f8b8d] hover:bg-[#0c6e70] text-white py-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 shadow-md transition-all" onclick="toggleMobileMenu()">
+                        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                    </a>
+                    <a href="signup.html" class="w-full bg-slate-900 border border-slate-800 text-gray-300 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-slate-850 transition-all" onclick="toggleMobileMenu()">
+                        <i class="fa-solid fa-user-plus"></i> Sign Up
+                    </a>
+                </div>
+            `;
+        }
+
+        mobileDrawer.innerHTML = `
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
+            <!-- Drawer Body -->
+            <div class="fixed inset-y-0 right-0 w-80 bg-slate-950 border-l border-slate-900 shadow-2xl p-6 flex flex-col justify-between z-10 transition-transform duration-300 transform translate-x-full" id="mobileDrawerBody">
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-white/5 pb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black text-[#14b8a6] uppercase tracking-wider font-display">Navigation Menu</span>
+                        </div>
+                        <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white text-lg transition">✕</button>
+                    </div>
+                    <nav class="flex flex-col gap-3 text-sm font-medium">
+                        <a href="index.html" class="mobile-nav-link flex items-center gap-3 text-gray-300 hover:text-[#0f8b8d] p-3 rounded-xl hover:bg-white/5 transition" id="mLink-index">
+                            <i class="fa-solid fa-house text-[#14b8a6]"></i> Home
+                        </a>
+                        <a href="request.html" class="mobile-nav-link flex items-center gap-3 text-gray-300 hover:text-[#0f8b8d] p-3 rounded-xl hover:bg-white/5 transition" id="mLink-request">
+                            <i class="fa-solid fa-screwdriver-wrench text-[#14b8a6]"></i> Repair Request
+                        </a>
+                        <a href="dashboard.html" class="mobile-nav-link flex items-center gap-3 text-gray-300 hover:text-[#0f8b8d] p-3 rounded-xl hover:bg-white/5 transition" id="mLink-dashboard">
+                            <i class="fa-solid fa-chart-line text-[#14b8a6]"></i> Dashboard
+                        </a>
+                        <a href="marketplace.html" class="mobile-nav-link flex items-center gap-3 text-gray-300 hover:text-[#0f8b8d] p-3 rounded-xl hover:bg-white/5 transition" id="mLink-marketplace">
+                            <i class="fa-solid fa-store text-[#14b8a6]"></i> Certified Store
+                        </a>
+                    </nav>
+                </div>
+                <div class="border-t border-white/5 pt-4">
+                    ${authBlockHtml}
+                </div>
+            </div>
+        `;
+
+        if (mobileDrawer.classList.contains('hidden')) {
+            mobileDrawer.classList.remove('hidden');
+            setTimeout(() => {
+                const body = document.getElementById('mobileDrawerBody');
+                if (body) body.classList.remove('translate-x-full');
+            }, 50);
+        } else {
+            const body = document.getElementById('mobileDrawerBody');
+            if (body) body.classList.add('translate-x-full');
+            setTimeout(() => {
+                mobileDrawer.classList.add('hidden');
+            }, 300);
+        }
+    }
+    window.toggleMobileMenu = toggleMobileMenu;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "RepairMaster",
+  "description": "Multi-role mobile phone repair management and marketplace platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

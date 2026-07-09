@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – RepairMaster Portal</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: #0A0F1D;
+            color: #E8EDF5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .text-teal {
+            color: #14B8A6;
+        }
+        .btn-teal {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
+        }
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(13, 148, 136, 0.45);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            border-color: #14B8A6;
+            background: rgba(13, 148, 136, 0.08);
+        }
+        .btn-google {
+            background: #fff;
+            color: #0A0F1D;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-google:hover {
+            background: #f1f3f4;
+            transform: scale(1.02);
+        }
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            margin: 16px 0;
+        }
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .rm-logo {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #0A0F1D;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            flex-shrink: 0;
+        }
+        .form-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .form-card input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        .form-card input:focus {
+            border-color: #14B8A6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+        .form-card label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.65);
+            transition: all 0.3s;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #14B8A6;
+            border-bottom-color: #14B8A6;
+        }
+        .mobile-menu {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+            .desktop-nav {
+                display: none;
+            }
+            .form-card {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#0A0F1D]/90 backdrop-blur-md border-b border-white/5 py-2 md:py-3 shadow-lg">
+        <div class="container-custom flex items-center justify-between gap-2 md:gap-4">
+            <div class="flex items-center gap-2 md:gap-4 cursor-pointer select-none" onclick="window.location.href='index.html'">
+                <!-- Logo Icon Container styled to match the mockup perfectly -->
+                <div class="relative flex items-center justify-center p-[2px] rounded-[15px] border border-teal/70 bg-[#0A0F1D] h-10 w-10 md:h-[60px] md:w-[60px] shadow-[0_0_15px_rgba(20,184,166,0.15)] shrink-0 transition-transform duration-300 hover:scale-105">
+                    <img src="assets/images/logo.png" alt="RepairMaster Logo" class="h-full w-full object-cover rounded-[13px]" />
+                </div>
+                
+                <!-- Vertical Divider -->
+                <div class="h-8 md:h-[54px] w-[1.5px] bg-teal/60 shrink-0"></div>
+                
+                <!-- Branding Text Block -->
+                <div class="flex flex-col justify-center relative pr-4 md:pr-8">
+                    <div class="font-display text-base sm:text-lg md:text-[24px] font-bold tracking-tight leading-none text-white">
+                        Repair<span class="text-teal">Master</span>
+                    </div>
+                    <!-- Horizontal Line -->
+                    <div class="w-full h-[1.5px] bg-teal/60 my-0.5 md:my-1"></div>
+                    <!-- Tagline -->
+                    <div class="text-[8px] sm:text-[10px] md:text-[12px] font-semibold text-white leading-none tracking-normal">
+                        Direct To Consumer
+                    </div>
+                    <!-- Powered By -->
+                    <div class="text-[6px] sm:text-[8px] md:text-[9px] text-white/90 italic mt-0.5 leading-none">
+                        powered by <span class="text-teal font-medium not-italic">cm2us.com</span>
+                    </div>
+                    
+                    <!-- Sparkles Sparkle on the Right of the text -->
+                    <div class="absolute right-0 bottom-1 flex flex-col items-center gap-1">
+                        <!-- Large Sparkle -->
+                        <svg class="w-2.5 h-2.5 md:w-3 md:h-3 text-teal animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation tabs (Center) -->
+            <nav class="desktop-nav hidden md:flex items-center gap-8 text-sm font-semibold mx-auto" id="mainNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="request.html" class="nav-link">Repair Request</a>
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </nav>
+
+            <!-- Sign In/Sign Up or Profile dropdown (Right) -->
+            <div class="desktop-nav hidden md:flex items-center gap-4">
+                <a href="login.html" class="nav-link text-sm font-semibold active" id="navLogin">Login</a>
+                <a href="signup.html" class="btn-teal py-2 px-5 text-xs font-bold rounded-xl shadow-none hover:scale-105 transition" id="navSignup">Sign Up</a>
+                <span id="navUserInfo" class="hidden flex items-center gap-4">
+                    <!-- Loaded dynamically in main.js -->
+                </span>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-white text-2xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN FORM CONTAINER -->
+    <main class="pt-[96px] md:pt-[116px] pb-16 flex items-center justify-center flex-1">
+        <div class="form-card max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="rm-logo mx-auto mb-4" style="width:64px;height:64px;font-size:28px;">RM</div>
+                <h2 class="text-2xl font-bold text-white font-display">Welcome Back</h2>
+                <p class="text-sm text-gray-400">Login to your RepairMaster account</p>
+            </div>
+
+            <button onclick="signInWithGoogle()" class="btn-google w-full">
+                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Sign in with Google
+            </button>
+
+            <div class="or-divider">or</div>
+
+            <form id="loginForm" onsubmit="event.preventDefault(); handleSignIn();">
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <div class="flex items-center justify-between text-sm mb-6">
+                    <label class="flex items-center gap-2 text-gray-400">
+                        <input type="checkbox" class="accent-teal"> Remember me
+                    </label>
+                    <a href="#" class="text-teal hover:underline text-xs">Forgot password?</a>
+                </div>
+                <button type="button" onclick="handleSignIn()" class="btn-teal w-full mt-2">Sign In</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-6">
+                Don't have an account? <a href="signup.html" class="text-teal font-bold hover:underline">Sign Up</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 bg-[#080D1A] py-12 pb-24 md:pb-12 mt-20 text-sm text-grayText">
+        <div class="container-custom grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="rm-logo w-10 h-10 text-lg rounded-xl"></div>
+                    <span class="font-bold text-white text-lg font-display">RepairMaster</span>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed">Premium Doorstep &amp; Laboratory Repairs for Nagpur, Wardha &amp; Amravati regions. Fast, reliable, and secure.</p>
+                <p class="text-[10px] text-gray-600">© 2026 RepairMaster. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Service Locations</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><span class="text-teal"><i class="fa-solid fa-location-dot mr-1"></i> Wardha Hub</span> (Fully Active)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Nagpur Hub (Coming soon)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Amravati Hub (Coming soon)</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="request.html" class="hover:text-teal transition"><i class="fa-regular fa-file-lines mr-1.5 text-teal"></i> Submit Repair Request</a></li>
+                    <li><a href="dashboard.html" class="hover:text-teal transition"><i class="fa-solid fa-chart-line mr-1.5 text-teal"></i> Customer Portal Dashboard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Platform Details</h4>
+                <p class="text-xs text-gray-500 leading-relaxed mb-3">RepairMaster is a next-gen Direct-To-Consumer smartphone service network. Engineered using Supabase Real-time PostgreSQL, Tailwind CSS, and Kotlin, our mission is to deliver transparent, fast, and high-density doorstep repairs across Maharashtra.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Back to Top Button (Mobile) -->
+    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-24 right-6 z-40 bg-teal-600 hover:bg-teal-500 text-slate-950 p-3 rounded-full shadow-2xl transition duration-300 transform scale-0 focus:outline-none">
+        <i class="fa-solid fa-arrow-up text-base"></i>
+    </button>
+
+    <!-- Mobile App Bottom Navigation Bar -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-[#070b14]/95 border-t border-white/10 backdrop-blur-lg flex justify-around py-3 z-50 text-center font-display shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-house text-base mb-1"></i>
+            <span>Home</span>
+        </a>
+        <a href="request.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-screwdriver-wrench text-base mb-1"></i>
+            <span>Request</span>
+        </a>
+        <a href="dashboard.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-chart-simple text-base mb-1"></i>
+            <span>Hub</span>
+        </a>
+        <a href="index.html#marketplace-section" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-store text-base mb-1"></i>
+            <span>Store</span>
+        </a>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="fixed bottom-20 md:bottom-8 right-8 z-50 px-6 py-4 rounded-xl font-bold text-sm shadow-xl max-w-md pointer-events-none opacity-0 translate-y-8 transition-all duration-500"></div>
+
+    <!-- Supabase Client & Multi-Page script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

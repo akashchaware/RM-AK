@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard – RepairMaster Support Hub</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: #0A0F1D;
+            color: #E8EDF5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .text-teal {
+            color: #14B8A6;
+        }
+        .btn-teal {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 10px 24px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(13, 148, 136, 0.2);
+        }
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(13, 148, 136, 0.35);
+        }
+        .rm-logo {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #0A0F1D;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            flex-shrink: 0;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.65);
+            transition: all 0.3s;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #14B8A6;
+            border-bottom-color: #14B8A6;
+        }
+        .mobile-menu {
+            display: none;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .status-Pending { background: rgba(245, 158, 11, 0.12); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-Technician-Assigned { background: rgba(59, 130, 246, 0.12); color: #3B82F6; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .status-Pickup-Pending { background: rgba(14, 165, 233, 0.12); color: #0EA5E9; border: 1px solid rgba(14, 165, 233, 0.2); }
+        .status-With-RepairMaster { background: rgba(139, 92, 246, 0.12); color: #8B5CF6; border: 1px solid rgba(139, 92, 246, 0.2); }
+        .status-Quotation-Sent { background: rgba(245, 158, 11, 0.12); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-Confirmed { background: rgba(16, 185, 129, 0.12); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-Completed { background: rgba(16, 185, 129, 0.2); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-Rejected { background: rgba(239, 68, 68, 0.12); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .status-Reassign-Needed { background: rgba(239, 68, 68, 0.12); color: #F59E0B; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .status-Ready-For-Delivery { background: rgba(16, 185, 129, 0.12); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-Awaiting-Payment { background: rgba(245, 158, 11, 0.12); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2); }
+
+        .action-btn {
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 2px;
+        }
+        .btn-assign { background: #F59E0B; color: #0A0F1D; }
+        .btn-pickup { background: #0D9488; color: #fff; }
+        .btn-verify { background: #14B8A6; color: #0A0F1D; }
+        .btn-diagnose { background: #8B5CF6; color: #fff; }
+        .btn-part { background: #EC4899; color: #fff; }
+        .btn-quote { background: #F59E0B; color: #0A0F1D; }
+        .btn-confirm { background: #10B981; color: #0A0F1D; }
+        .btn-reject { background: #EF4444; color: #fff; }
+
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+            .desktop-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#0A0F1D]/90 backdrop-blur-md border-b border-white/5 py-2 md:py-3 shadow-lg">
+        <div class="container-custom flex items-center justify-between gap-2 md:gap-4">
+            <div class="flex items-center gap-2 md:gap-4 cursor-pointer select-none" onclick="window.location.href='index.html'">
+                <!-- Logo Icon Container styled to match the mockup perfectly -->
+                <div class="relative flex items-center justify-center p-[2px] rounded-[15px] border border-teal/70 bg-[#0A0F1D] h-11 w-11 md:h-[64px] md:w-[64px] shadow-[0_0_20px_rgba(20,184,166,0.25)] shrink-0 transition-transform duration-300 hover:scale-105">
+                    <img src="assets/images/logo.png" alt="RepairMaster Logo" class="h-full w-full object-cover rounded-[13px]" />
+                </div>
+                
+                <!-- Vertical Divider -->
+                <div class="h-8 md:h-[54px] w-[1.5px] bg-teal/60 shrink-0"></div>
+                
+                <!-- Branding Text Block -->
+                <div class="flex flex-col justify-center relative pr-4 md:pr-8">
+                    <div class="font-display text-sm sm:text-base md:text-lg font-bold tracking-tight leading-none text-white">
+                        Repair<span class="text-teal">Master</span>
+                    </div>
+                    <!-- Horizontal Line -->
+                    <div class="w-full h-[1px] bg-teal/40 my-0.5 md:my-1"></div>
+                    <!-- Tagline -->
+                    <div class="text-[7px] sm:text-[8px] md:text-[10px] font-normal text-gray-400 leading-none tracking-normal">
+                        Direct To Consumer
+                    </div>
+                    <!-- Powered By -->
+                    <div class="text-[6px] sm:text-[7px] md:text-[8px] text-white/50 italic mt-0.5 leading-none">
+                        powered by <span class="text-teal font-medium not-italic">cm2us.com</span>
+                    </div>
+                    
+                    <!-- Sparkles Sparkle on the Right of the text -->
+                    <div class="absolute right-0 bottom-1 flex flex-col items-center gap-1">
+                        <!-- Large Sparkle -->
+                        <svg class="w-2 h-2 md:w-2.5 md:h-2.5 text-teal animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation tabs (Center) -->
+            <nav class="desktop-nav hidden md:flex items-center gap-8 text-sm font-semibold mx-auto" id="mainNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="request.html" class="nav-link">Repair Request</a>
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            </nav>
+
+            <!-- Sign In/Sign Up or Profile dropdown (Right) -->
+            <div class="desktop-nav hidden md:flex items-center gap-4">
+                <a href="login.html" class="nav-link text-sm font-semibold" id="navLogin">Login</a>
+                <a href="signup.html" class="btn-teal py-2 px-5 text-xs font-bold rounded-xl shadow-none hover:scale-105 transition" id="navSignup">Sign Up</a>
+                <span id="navUserInfo" class="hidden flex items-center gap-4">
+                    <!-- Loaded dynamically in main.js -->
+                </span>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-white text-2xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD HUB -->
+    <main class="pt-[96px] md:pt-[116px] pb-12 container-custom flex-1">
+        <div class="flex flex-wrap items-center justify-between mb-10 gap-4 border-b border-white/5 pb-6">
+            <div>
+                <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold">
+                    <i class="fa-solid fa-chart-simple mr-1"></i> Wardha Hub Hub-Console
+                </span>
+                <h2 class="text-4xl font-bold text-white mt-2 font-display">DTC Tech Support Dashboard</h2>
+                <p class="text-gray-400 text-sm">Review, track or finalize real-time estimates, spare parts surveys and ticket assignments.</p>
+            </div>
+            <div id="userRoleBadge" class="hidden">
+                <span class="role-badge text-sm px-4 py-2 bg-teal-500/10 text-teal-400 rounded-full border border-teal-500/20">
+                    <i class="fa-regular fa-user mr-2 text-teal"></i> Active Role: <strong id="roleDisplay">Customer</strong>
+                </span>
+            </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div id="metric-cards-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <div class="bg-navyBG/40 border border-grayBorder/40 rounded-xl p-5 text-center">
+                <div class="text-3xl font-black text-teal" id="statTotal">0</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-bold">Total Tickets</div>
+            </div>
+            <div class="bg-navyBG/40 border border-grayBorder/40 rounded-xl p-5 text-center">
+                <div class="text-3xl font-black text-amber-400" id="statPending">0</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-bold">Pending Assignment</div>
+            </div>
+            <div class="bg-navyBG/40 border border-grayBorder/40 rounded-xl p-5 text-center">
+                <div class="text-3xl font-black text-blue-400" id="statInProgress">0</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-bold">Active Handover</div>
+            </div>
+            <div class="bg-navyBG/40 border border-grayBorder/40 rounded-xl p-5 text-center">
+                <div class="text-3xl font-black text-emerald-400" id="statCompleted">0</div>
+                <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider font-bold">Completed &amp; Fixed</div>
+            </div>
+        </div>
+
+        <!-- Dynamic Dashboard Tabs -->
+        <div id="dashboard-tab-buttons-container" class="flex items-center gap-1 border-b border-white/5 pb-0 mb-8 overflow-x-auto scrollbar-none">
+            <!-- Dynamically populated in main.js based on role -->
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Orders / Tickets Section (Expanded to Full Width) -->
+            <div id="ticketsCol" class="lg:col-span-3 space-y-6">
+                
+                <!-- Tab Section: Tickets -->
+                <div id="tab-tickets-section" class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white font-display flex items-center gap-2">
+                            <i class="fa-solid fa-ticket text-teal"></i> Assigned Doorstep Tickets
+                        </h3>
+                        <span class="text-xs text-gray-500">Auto-synced with Supabase</span>
+                    </div>
+
+                    <div id="dashboardContent" class="space-y-4">
+                        <div class="text-center text-gray-400 py-12 bg-navyBG/20 border border-grayBorder rounded-2xl">
+                            <i class="fa-solid fa-spinner fa-spin mr-2"></i> Initializing synchronized ticket session...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Section: Filters -->
+                <div id="tab-filters-section" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white font-display flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-teal"></i> Control Console
+                        </h3>
+                        <span class="text-xs text-gray-500 font-bold bg-[#14B8A6]/10 text-teal px-2.5 py-0.5 rounded-full">Authorized Hub Staff only</span>
+                    </div>
+
+                    <!-- COORDINATOR / STAFF FILTERS & GROUPING PANEL -->
+                    <div id="coordinatorFiltersPanel" class="hidden bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800/60 pb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-filter"></i> Coordinator Control Console
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-bold bg-teal-500/10 px-2.5 py-0.5 rounded-full">Apply precise status, technician, and date range filters</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5">
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">Search Client / Order No</label>
+                                <input type="text" id="filterSearch" oninput="applyDashboardFilters()" placeholder="Name, Phone, ID..." class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:border-teal-400 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">Workflow Status</label>
+                                <select id="filterStatus" onchange="applyDashboardFilters()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:border-teal-400 outline-none cursor-pointer">
+                                    <option value="All">All Statuses</option>
+                                    <option value="PendingAction">Pending Action (Needs Attention)</option>
+                                    <option value="New">New</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Repair">Repair</option>
+                                    <option value="Delivery">Delivery</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">Assigned Technician</label>
+                                <select id="filterTechnician" onchange="applyDashboardFilters()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:border-teal-400 outline-none cursor-pointer">
+                                    <option value="All">All Technicians</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">Start Date</label>
+                                <input type="date" id="filterStartDate" onchange="applyDashboardFilters()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:border-teal-400 outline-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">End Date</label>
+                                <input type="date" id="filterEndDate" onchange="applyDashboardFilters()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-xs text-white focus:border-teal-400 outline-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Non-Staff/Guest Notice -->
+                    <div id="nonStaffFilterNotice" class="hidden bg-[#121B33]/20 border border-slate-800/80 p-8 rounded-2xl text-center space-y-4 max-w-md mx-auto">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center text-3xl text-amber-500 mx-auto">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white font-display">Staff Authorized Section</h4>
+                        <p class="text-xs text-gray-400">The Coordinator Control Panel filters are only visible and interactive for RepairMaster coordinators, support staff, technicians and administrators.</p>
+                    </div>
+                </div>
+
+                <!-- Tab Section: Lab Inventory -->
+                <div id="tab-inventory-section" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white font-display flex items-center gap-2">
+                            <i class="fa-solid fa-boxes-stacked text-teal"></i> Lab Parts Inventory
+                        </h3>
+                        <span class="text-xs text-gray-500 font-bold bg-[#14B8A6]/10 text-teal px-2.5 py-0.5 rounded-full">Direct Lab Stock Access</span>
+                    </div>
+
+                    <!-- REPAIRMASTER PARTS INVENTORY MANAGEMENT AREA -->
+                    <div id="repairmasterInventoryArea" class="hidden space-y-6"></div>
+
+                    <!-- Non-Staff/Guest Notice -->
+                    <div id="nonStaffInventoryNotice" class="hidden bg-[#121B33]/20 border border-slate-800/80 p-8 rounded-2xl text-center space-y-4 max-w-md mx-auto">
+                        <div class="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center text-3xl text-amber-500 mx-auto">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white font-display">Restricted Inventory Area</h4>
+                        <p class="text-xs text-gray-400">Only authorized laboratory technicians, repairmasters, and system admins have permission to read/write real-time spare part quantities.</p>
+                    </div>
+                </div>
+
+                <!-- Tab Section: SQL Schema -->
+                <div id="tab-sql-section" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white font-display flex items-center gap-2">
+                            <i class="fa-solid fa-database text-teal"></i> Developer Setup Script
+                        </h3>
+                        <span class="text-xs text-gray-500 font-bold bg-amber-500/15 text-amber-400 px-2.5 py-0.5 rounded-full">System Database Setup</span>
+                    </div>
+
+                    <!-- Collapsible Supabase SQL console for direct data acquisition -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-white uppercase tracking-wider">Developer Setup Script Console</h4>
+                                <p class="text-xs text-red-400 font-bold flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-exclamation animate-pulse"></i> Warning: Do not run this on a production database without reviewing DROP statements first.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4 border-t border-slate-800/60 pt-6">
+                            <p class="text-xs text-gray-400">Below is the complete, production-ready PostgreSQL setup script to construct schemas, relational entities, catalog coverages, laboratory inventories, Row Level Security constraints, triggers, and compatibility views automatically:</p>
+                            <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-[10px] text-teal-400 font-mono overflow-x-auto max-h-96 leading-relaxed">
+-- =========================================================================
+--                     DEVELOPER SETUP SCRIPT
+-- =========================================================================
+-- WARNING: Do not run this on a production database without reviewing
+-- DROP statements first, as they will delete existing tables and data!
+-- =========================================================================
+
+-- Optional: Clean up existing schema (active by default to prevent type mismatch on upgrade)
+DROP VIEW IF EXISTS public.profiles CASCADE;
+DROP TABLE IF EXISTS public.alerts CASCADE;
+DROP TABLE IF EXISTS public.orders CASCADE;
+DROP TABLE IF EXISTS public.repair_parts_inventory CASCADE;
+DROP TABLE IF EXISTS public.parts_pricing CASCADE;
+DROP TABLE IF EXISTS public.parts CASCADE;
+DROP TABLE IF EXISTS public.repair_types CASCADE;
+DROP TABLE IF EXISTS public.devices CASCADE;
+DROP TABLE IF EXISTS public.brands CASCADE;
+DROP TABLE IF EXISTS public.user_roles CASCADE;
+DROP TABLE IF EXISTS public.roles CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+
+-- 1. Create Users Table (user schema mirroring)
+CREATE TABLE IF NOT EXISTS public.users (
+    id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT,
+    phone TEXT,
+    address TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 2. Create Roles Master Reference
+CREATE TABLE IF NOT EXISTS public.roles (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+);
+
+INSERT INTO public.roles (id, name) VALUES
+(1, 'admin'), (2, 'coordinator'), (3, 'technician'), (4, 'repairmaster'), (5, 'customer')
+ON CONFLICT (id) DO NOTHING;
+
+-- 3. Create user_roles junction
+CREATE TABLE IF NOT EXISTS public.user_roles (
+    id SERIAL PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    role_id INT REFERENCES public.roles(id) ON DELETE CASCADE,
+    UNIQUE(user_id, role_id)
+);
+
+-- 4. Create Brands Table
+CREATE TABLE IF NOT EXISTS public.brands (
+    id TEXT PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+);
+
+INSERT INTO public.brands (id, name) VALUES
+('b1', 'Apple'), ('b2', 'Samsung'), ('b3', 'Vivo'), ('b4', 'OnePlus'), 
+('b5', 'Xiaomi (MI)'), ('b6', 'Oppo'), ('b7', 'Realme'), ('b8', 'Google'), 
+('b9', 'Nothing'), ('b10', 'Motorola'), ('b11', 'iQOO'), ('b12', 'Lava')
+ON CONFLICT (id) DO NOTHING;
+
+-- 5. Create Devices Table
+CREATE TABLE IF NOT EXISTS public.devices (
+    id TEXT PRIMARY KEY,
+    brand_id TEXT REFERENCES public.brands(id) ON DELETE CASCADE,
+    name TEXT NOT NULL
+);
+
+INSERT INTO public.devices (id, brand_id, name) VALUES
+('d1', 'b1', 'iPhone 15 Pro Max'),
+('d2', 'b1', 'iPhone 15'),
+('d3', 'b3', 'Vivo V30 Pro'),
+('d4', 'b3', 'Vivo V29 Pro'),
+('d5', 'b2', 'Galaxy S24 Ultra'),
+('d6', 'b2', 'Galaxy A55'),
+('d7', 'b4', 'OnePlus 12'),
+('d8', 'b5', 'Redmi Note 13 Pro'),
+('d9', 'b6', 'Reno 11 Pro'),
+('d10', 'b7', 'GT 6 Pro'),
+('d11', 'b8', 'Pixel 8 Pro'),
+('d12', 'b9', 'Phone 2'),
+('d13', 'b10', 'Edge 50 Pro'),
+('d14', 'b11', 'iQOO 12'),
+('d15', 'b12', 'Agni 2')
+ON CONFLICT (id) DO NOTHING;
+
+-- 6. Create Repair Types Reference
+CREATE TABLE IF NOT EXISTS public.repair_types (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    label TEXT NOT NULL
+);
+
+INSERT INTO public.repair_types (id, name, label) VALUES
+('rt1', 'screen', '📱 Screen Replacement'),
+('rt2', 'battery', '🔋 Battery Replacement'),
+('rt3', 'chargingport', '🔌 Charging Port Repair'),
+('rt4', 'camera', '📷 Camera Repair'),
+('rt5', 'speaker', '🔊 Speaker / Mic Repair'),
+('rt6', 'button', '🔘 Button Repair'),
+('rt7', 'motherboard', '💻 Motherboard Repair'),
+('rt8', 'waterdamage', '💧 Water Damage Repair'),
+('rt9', 'software', '📀 Software / OS Repair'),
+('rt10', 'network', '📶 Network / Antenna Repair'),
+('rt11', 'completeoverhaul', '⚙️ Complete Overhaul')
+ON CONFLICT (id) DO NOTHING;
+
+-- 7. Create Parts Table for catalog lookup
+CREATE TABLE IF NOT EXISTS public.parts (
+    id SERIAL PRIMARY KEY,
+    device_id TEXT REFERENCES public.devices(id) ON DELETE CASCADE,
+    repair_type_id TEXT REFERENCES public.repair_types(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL
+);
+
+INSERT INTO public.parts (device_id, repair_type_id, name, price) VALUES
+('d3', 'rt1', 'AMOLED Screen Panel Assembly', 6300.00),
+('d3', 'rt1', 'Digitizer & Display Flex', 504.00),
+('d3', 'rt1', 'Water-Resistant Frame Adhesive Seal', 126.00),
+('d3', 'rt2', 'Certified Li-Po 5000mAh Battery Cell', 1500.00),
+('d3', 'rt2', 'Thermal Dissipation Pad', 150.00),
+('d1', 'rt1', 'Super Retina XDR OLED Display', 25200.00),
+('d1', 'rt1', 'Force Touch Digitizer Sensor', 2016.00),
+('d1', 'rt1', 'IP68 Watertight Perimeter Seal Adhesive', 504.00),
+('d1', 'rt2', 'OEM Battery Cell Replacement', 4500.00),
+('d5', 'rt1', 'Dynamic AMOLED 2X Display Module', 21500.00),
+('d5', 'rt1', 'Corning Gorilla Armor Glass Layer', 3200.00),
+('d5', 'rt2', 'Official Li-Ion 5000mAh Battery Pack', 2800.00),
+('d5', 'rt3', 'USB-C SuperFast Charging Port PCB', 1400.00),
+('d5', 'rt7', 'Logic Board IC Power Management Chip', 5500.00)
+ON CONFLICT DO NOTHING;
+
+-- 8. Create Parts Pricing Table (For Quick Calculator Tool)
+CREATE TABLE IF NOT EXISTS public.parts_pricing (
+    id SERIAL PRIMARY KEY,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    issue_type TEXT NOT NULL,
+    part_name TEXT NOT NULL,
+    tier TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    labor DECIMAL(10,2) NOT NULL,
+    compatible_models TEXT,
+    warranty TEXT,
+    turnaround TEXT,
+    source_hub TEXT,
+    wholesale_price DECIMAL(10,2),
+    wholesale_source TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+INSERT INTO public.parts_pricing (brand, model, issue_type, part_name, tier, price, labor, compatible_models, warranty, turnaround, source_hub, wholesale_price, wholesale_source) VALUES
+('Apple', 'iPhone 15 Pro Max', 'Screen Replacement', '[Premium] Superb OEM-equivalent component for iPhone 15 Pro Max', 'Premium', 14500.00, 1500.00, 'iPhone 15 Pro', '180 Days Direct Hub Warranty', '1-2 Hours', 'Wardha Central Hub', 9500.00, 'Telipura Market, Sitabuldi, Nagpur'),
+('Apple', 'iPhone 15 Pro Max', 'Screen Replacement', '[Standard] High-grade certified third-party component for iPhone 15 Pro Max', 'Standard', 8400.00, 1250.00, 'iPhone 15 Pro', '90 Days Local Warranty', '1-2 Hours', 'Nagpur Local Hub', 5500.00, 'Gaffar Market, Karol Bagh, Delhi'),
+('Apple', 'iPhone 15 Pro Max', 'Screen Replacement', '[Compatible] Cost-effective functional component for iPhone 15 Pro Max', 'Compatible', 4600.00, 1100.00, 'iPhone 15 Pro', '30 Days Basic Warranty', '1-2 Hours', 'Mumbai Hub', 3000.00, 'Manish Market, Fort, Mumbai'),
+('Apple', 'iPhone 15 Pro Max', 'Battery Replacement', '[Premium] Superb OEM-equivalent component for iPhone 15 Pro Max', 'Premium', 3200.00, 800.00, 'iPhone 15 Pro', '180 Days Direct Hub Warranty', '30-45 Mins', 'Wardha Central Hub', 2100.00, 'SP Road, Halasuru, Bengaluru'),
+('Vivo', 'Vivo V30 Pro', 'Screen Replacement', '[Premium] Superb OEM-equivalent component for Vivo V30 Pro', 'Premium', 5800.00, 1000.00, 'Vivo V30', '180 Days Direct Hub Warranty', '1-2 Hours', 'Nagpur Local Hub', 3800.00, 'Telipura Market, Sitabuldi, Nagpur'),
+('Vivo', 'Vivo V30 Pro', 'Charging Port Repair', '[Standard] High-grade certified third-party component for Vivo V30 Pro', 'Standard', 850.00, 400.00, 'Vivo V30', '90 Days Local Warranty', '30 Mins', 'Nagpur Local Hub', 550.00, 'Modi No. 3, Sitabuldi, Nagpur')
+ON CONFLICT DO NOTHING;
+
+-- 9. Create Repair Parts Inventory Table (For Lab Stock)
+CREATE TABLE IF NOT EXISTS public.repair_parts_inventory (
+    id SERIAL PRIMARY KEY,
+    part_name TEXT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    quantity INT DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Seed some laboratory stock
+INSERT INTO public.repair_parts_inventory (part_name, price, quantity) VALUES
+('OEM AMOLED Display Panel Assembly', 6200.00, 12),
+('High-Density Li-Po Battery Core (Vivo V30 Pro)', 1350.00, 25),
+('USB-C Charging Board (Sub-PCB)', 650.00, 40),
+('IP68 Perimeter Liquid Seal Adhesive Adhesive Strip', 95.00, 100),
+('Super Retina OLED Panel Assembly (iPhone 15 Pro Max)', 23500.00, 4),
+('Ultra-Premium Thermal Paste Syringe', 450.00, 15)
+ON CONFLICT DO NOTHING;
+
+-- 10. Create Orders Table
+CREATE TABLE IF NOT EXISTS public.orders (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    order_number TEXT UNIQUE NOT NULL,
+    user_id UUID REFERENCES auth.users(id),
+    customer_name TEXT NOT NULL,
+    customer_phone TEXT NOT NULL,
+    customer_email TEXT,
+    address TEXT NOT NULL,
+    device_id TEXT,
+    device_other TEXT,
+    repair_type_id TEXT,
+    repair_other TEXT,
+    photo_url TEXT,
+    additional_notes TEXT,
+    status TEXT DEFAULT 'Pending' NOT NULL,
+    parts_quality TEXT,
+    parts_total DECIMAL(10,2) DEFAULT 0,
+    service_fee DECIMAL(10,2) DEFAULT 0,
+    diagnosis_charge DECIMAL(10,2) DEFAULT 250,
+    total_price DECIMAL(10,2) DEFAULT 0,
+    discount_applied DECIMAL(10,2) DEFAULT 0,
+    custom_quote_parts TEXT,
+    diagnosis_notes TEXT,
+    notes TEXT, -- Advice to Coordinator
+    pickup_otp TEXT,
+    assigned_to UUID REFERENCES auth.users(id),
+    technician_id UUID REFERENCES auth.users(id),
+    repairmaster_id UUID REFERENCES auth.users(id),
+    customer_rating INT,
+    customer_review TEXT,
+    invoice_number TEXT,
+    payment_method TEXT,
+    payment_status TEXT DEFAULT 'Unpaid',
+    tax_amount DECIMAL(10,2) DEFAULT 0,
+    platform_fee DECIMAL(10,2) DEFAULT 0,
+    grand_total DECIMAL(10,2) DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 11. Create Coordinator Alerts Table
+CREATE TABLE IF NOT EXISTS public.alerts (
+    id SERIAL PRIMARY KEY,
+    order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    type TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 12. Enable Row Level Security (RLS)
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.brands ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.devices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.repair_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.parts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.parts_pricing ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.repair_parts_inventory ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.alerts ENABLE ROW LEVEL SECURITY;
+
+-- 13. Create Security Policies
+DROP POLICY IF EXISTS "Allow public select" ON public.users;
+DROP POLICY IF EXISTS "Allow authenticated insert" ON public.users;
+DROP POLICY IF EXISTS "Allow user self update" ON public.users;
+CREATE POLICY "Allow public select" ON public.users FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated insert" ON public.users FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Allow user self update" ON public.users FOR UPDATE USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Allow public select roles" ON public.roles;
+CREATE POLICY "Allow public select roles" ON public.roles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select user_roles" ON public.user_roles;
+DROP POLICY IF EXISTS "Allow authenticated operations user_roles" ON public.user_roles;
+CREATE POLICY "Allow public select user_roles" ON public.user_roles FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated operations user_roles" ON public.user_roles FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public select brands" ON public.brands;
+CREATE POLICY "Allow public select brands" ON public.brands FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select devices" ON public.devices;
+CREATE POLICY "Allow public select devices" ON public.devices FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select repair_types" ON public.repair_types;
+CREATE POLICY "Allow public select repair_types" ON public.repair_types FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select parts" ON public.parts;
+CREATE POLICY "Allow public select parts" ON public.parts FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select parts_pricing" ON public.parts_pricing;
+CREATE POLICY "Allow public select parts_pricing" ON public.parts_pricing FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public select inventory" ON public.repair_parts_inventory;
+DROP POLICY IF EXISTS "Allow authenticated operations inventory" ON public.repair_parts_inventory;
+CREATE POLICY "Allow public select inventory" ON public.repair_parts_inventory FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated operations inventory" ON public.repair_parts_inventory FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public select orders" ON public.orders;
+DROP POLICY IF EXISTS "Allow authenticated operations" ON public.orders;
+CREATE POLICY "Allow public select orders" ON public.orders FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated operations" ON public.orders FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public select alerts" ON public.alerts;
+DROP POLICY IF EXISTS "Allow authenticated operations alerts" ON public.alerts;
+CREATE POLICY "Allow public select alerts" ON public.alerts FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated operations alerts" ON public.alerts FOR ALL USING (true);
+
+-- 14. Auto-mirror new Auth users to Public Users and User Roles
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (id, email, name, phone, address)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    COALESCE(NEW.raw_user_meta_data->>'phone', ''),
+    COALESCE(NEW.raw_user_meta_data->>'city', 'Wardha')
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    email = EXCLUDED.email,
+    name = COALESCE(EXCLUDED.name, public.users.name),
+    phone = COALESCE(EXCLUDED.phone, public.users.phone);
+
+  INSERT INTO public.user_roles (user_id, role_id)
+  VALUES (NEW.id, 5) -- Default Role is 'customer'
+  ON CONFLICT (user_id, role_id) DO NOTHING;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- 15. Create Profiles View for frontend backward compatibility
+CREATE OR REPLACE VIEW public.profiles AS
+WITH user_highest_role AS (
+    SELECT DISTINCT ON (ur.user_id)
+        ur.user_id,
+        r.name AS role_name
+    FROM public.user_roles ur
+    JOIN public.roles r ON ur.role_id = r.id
+    ORDER BY ur.user_id,
+        CASE r.name
+            WHEN 'admin' THEN 1
+            WHEN 'coordinator' THEN 2
+            WHEN 'technician' THEN 3
+            WHEN 'repairmaster' THEN 4
+            WHEN 'customer' THEN 5
+            ELSE 6
+        END ASC
+)
+SELECT 
+    u.id,
+    u.email,
+    u.name AS full_name,
+    u.phone,
+    u.address,
+    u.created_at,
+    COALESCE(uhr.role_name, 'customer') AS role
+FROM public.users u
+LEFT JOIN user_highest_role uhr ON u.id = uhr.user_id;
+
+-- 16. Grant Permissions on Profiles View to Public API Roles
+GRANT SELECT ON public.profiles TO authenticated, anon;
+                            </pre>
+                            <button onclick="navigator.clipboard.writeText(document.querySelector('#tab-sql-section pre').textContent); showToast('📋 SQL Code copied to clipboard!', 'success');" class="btn-teal text-xs py-2 px-4 rounded-lg">
+                                <i class="fa-regular fa-copy mr-1"></i> Copy Schema SQL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Section: Dynamic Role Content -->
+                <div id="tab-dynamic-section" class="hidden space-y-6">
+                    <div id="dynamicTabContent"></div>
+                </div>
+
+            </div>
+            
+            <!-- Right Sidebar: Coordinator Alert Hub -->
+            <div id="coordinatorAlertsCol" class="hidden lg:col-span-1 space-y-6">
+                <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800/60 pb-3">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-bell text-amber-500 animate-bounce"></i> Alert Hub
+                        </h3>
+                        <span id="coordinatorAlertBadge" class="bg-amber-500/15 text-amber-400 text-[10px] font-black px-2 py-0.5 rounded-full">0 New</span>
+                    </div>
+                    <div id="coordinatorAlertsList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                        <div class="text-center py-8 text-xs text-gray-500">
+                            <i class="fa-solid fa-spinner fa-spin mr-1.5 text-teal"></i> Syncing alert logs...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 bg-[#080D1A] py-12 pb-24 md:pb-12 mt-20 text-sm text-grayText">
+        <div class="container-custom grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="rm-logo w-10 h-10 text-lg rounded-xl"></div>
+                    <span class="font-bold text-white text-lg font-display">RepairMaster</span>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed">Premium Doorstep &amp; Laboratory Repairs for Nagpur, Wardha &amp; Amravati regions. Fast, reliable, and secure.</p>
+                <p class="text-[10px] text-gray-600">© 2026 RepairMaster. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Service Locations</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><span class="text-teal"><i class="fa-solid fa-location-dot mr-1"></i> Wardha Hub</span> (Fully Active)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Nagpur Hub (Coming soon)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Amravati Hub (Coming soon)</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="request.html" class="hover:text-teal transition"><i class="fa-regular fa-file-lines mr-1.5 text-teal"></i> Submit Repair Request</a></li>
+                    <li><a href="dashboard.html" class="hover:text-teal transition"><i class="fa-solid fa-chart-line mr-1.5 text-teal"></i> Customer Portal Dashboard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Platform Details</h4>
+                <p class="text-xs text-gray-500 leading-relaxed mb-3">RepairMaster is a next-gen Direct-To-Consumer smartphone service network. Engineered using Supabase Real-time PostgreSQL, Tailwind CSS, and Kotlin, our mission is to deliver transparent, fast, and high-density doorstep repairs across Maharashtra.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Back to Top Button (Mobile) -->
+    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-24 right-6 z-40 bg-teal-600 hover:bg-teal-500 text-slate-950 p-3 rounded-full shadow-2xl transition duration-300 transform scale-0 focus:outline-none">
+        <i class="fa-solid fa-arrow-up text-base"></i>
+    </button>
+
+    <!-- Mobile App Bottom Navigation Bar -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-[#070b14]/95 border-t border-white/10 backdrop-blur-lg flex justify-around py-3 z-50 text-center font-display shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-house text-base mb-1"></i>
+            <span>Home</span>
+        </a>
+        <a href="request.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-screwdriver-wrench text-base mb-1"></i>
+            <span>Request</span>
+        </a>
+        <a href="dashboard.html" class="flex flex-col items-center text-[10px] text-teal">
+            <i class="fa-solid fa-chart-simple text-base mb-1"></i>
+            <span>Hub</span>
+        </a>
+        <a href="index.html#marketplace-section" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-store text-base mb-1"></i>
+            <span>Store</span>
+        </a>
+    </div>
+
+    <!-- General / Coordinator Order Detail Modal Overlay -->
+    <div id="orderDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-800/60 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal text-lg"><i class="fa-solid fa-ticket"></i></span>
+                    <div>
+                        <h3 class="text-lg font-black text-white font-display" id="modalOrderTitle">Smartphone Job Detail</h3>
+                        <p class="text-xs text-gray-400" id="modalOrderNumber">ID: RM-REQ-000</p>
+                    </div>
+                </div>
+                <button onclick="closeOrderDetailModal()" class="w-8 h-8 rounded-full bg-slate-800/60 hover:bg-slate-800 text-gray-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Modal Content -->
+            <div class="p-6 space-y-6 flex-1 overflow-y-auto" id="modalOrderBody">
+                <!-- Dynamically updated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="fixed bottom-20 md:bottom-8 right-8 z-50 px-6 py-4 rounded-xl font-bold text-sm shadow-xl max-w-md pointer-events-none opacity-0 translate-y-8 transition-all duration-500"></div>
+
+    <!-- Supabase Client & Multi-Page script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <!-- Static repair pricing data (replaces Supabase parts_pricing table for the calculator) -->
+    <script src="repair-data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

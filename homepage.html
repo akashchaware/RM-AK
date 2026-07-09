@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RepairMaster – Premium Doorstep & Lab Repairs</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background: #0A0F1D;
+            color: #E8EDF5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .text-teal {
+            color: #14B8A6;
+        }
+        .bg-teal-gradient {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+        }
+        .bg-dark-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .shadow-glow {
+            box-shadow: 0 8px 40px rgba(13, 148, 136, 0.15);
+        }
+        .shadow-glow:hover {
+            box-shadow: 0 12px 50px rgba(13, 148, 136, 0.25);
+            transform: translateY(-4px);
+        }
+        .transition-smooth {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-teal {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
+        }
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(13, 148, 136, 0.45);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            border-color: #14B8A6;
+            background: rgba(13, 148, 136, 0.08);
+        }
+        .btn-google {
+            background: #fff;
+            color: #0A0F1D;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-google:hover {
+            background: #f1f3f4;
+            transform: scale(1.02);
+        }
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            margin: 16px 0;
+        }
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .rm-logo {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #0A0F1D;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            flex-shrink: 0;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            min-height: 480px;
+            overflow: hidden;
+            border-radius: 0;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(10, 15, 29, 0.88) 25%, rgba(10, 15, 29, 0.3) 80%);
+            z-index: 1;
+        }
+        .carousel-content {
+            position: relative;
+            z-index: 3;
+            max-width: 620px;
+            color: #fff;
+        }
+        .carousel-content h1 {
+            font-size: clamp(2.6rem, 6vw, 4.8rem);
+            font-weight: 800;
+            line-height: 1.08;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        .carousel-content p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            max-width: 480px;
+            line-height: 1.6;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            display: flex;
+            gap: 12px;
+        }
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+        .carousel-dot.active {
+            background: #14B8A6;
+            box-shadow: 0 0 24px rgba(13, 148, 136, 0.5);
+            transform: scale(1.2);
+        }
+        .page-section {
+            display: none;
+            padding: 60px 0;
+            min-height: 70vh;
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeUp 0.6s ease forwards;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.65);
+            transition: color 0.3s;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #14B8A6;
+            border-bottom-color: #14B8A6;
+        }
+        .mobile-menu {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+            .desktop-nav {
+                display: none;
+            }
+            .carousel-slide {
+                padding: 0 5%;
+            }
+            .carousel-content h1 {
+                font-size: 2.2rem;
+            }
+        }
+        .form-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .form-card input,
+        .form-card select,
+        .form-card textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        .form-card input:focus,
+        .form-card select:focus,
+        .form-card textarea:focus {
+            border-color: #14B8A6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+        .form-card label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .form-card .other-input {
+            display: none;
+        }
+        .form-card .other-input.visible {
+            display: block;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 28px 32px;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(13, 148, 136, 0.25);
+            transform: translateY(-2px);
+        }
+        .calc-container {
+            max-width: 980px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 36px 40px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+        }
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        select:focus {
+            border-color: rgba(13, 148, 136, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+        }
+        select option {
+            background: #121B33;
+            color: #fff;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .part-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .part-item:last-child {
+            border-bottom: none;
+        }
+        .part-name {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        .part-price {
+            color: #14B8A6;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 14px;
+        }
+        .price-row:last-child {
+            border-bottom: none;
+        }
+        .total-row {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 14px;
+            margin-top: 6px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .offer-toggle {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px solid rgba(245, 158, 11, 0.12);
+            padding: 12px 20px;
+            border-radius: 16px;
+        }
+        .offer-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #F59E0B;
+            cursor: pointer;
+        }
+        .offer-toggle label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .offer-toggle .offer-badge {
+            background: #F59E0B;
+            color: #0A0F1D;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .release-strip {
+            background: linear-gradient(90deg, #F59E0B, #FCD34D);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .release-strip .close-strip {
+            background: rgba(0, 0, 0, 0.12);
+            border: none;
+            color: #0A0F1D;
+            cursor: pointer;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .release-strip .close-strip:hover {
+            background: rgba(0, 0, 0, 0.22);
+        }
+        .status-badge {
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-Pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+        .status-In-Progress {
+            background: rgba(13, 148, 136, 0.15);
+            color: #0D9488;
+        }
+        .status-Pickup-Pending {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3B82F6;
+        }
+        .status-With-RepairMaster {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8B5CF6;
+        }
+        .status-Quotation-Sent {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+        }
+        .status-Confirmed {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22C55E;
+        }
+        .status-Completed {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+        .status-Rejected {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        .status-Cancelled {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+        }
+        .status-Technician-Assigned {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3B82F6;
+        }
+        .status-RepairMaster-Assigned {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8B5CF6;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0F1D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #14B8A6;
+            border-radius: 10px;
+        }
+        .offer-card {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .offer-card:hover {
+            transform: translateY(-6px);
+            border-color: #F59E0B;
+            box-shadow: 0 12px 40px rgba(245, 158, 11, 0.06);
+        }
+        .city-notice {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .maintenance-banner {
+            background: rgba(13, 148, 136, 0.06);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            border-left: 4px solid #14B8A6;
+            padding: 14px 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            backdrop-filter: blur(4px);
+        }
+        .otp-input {
+            width: 100px;
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+        .action-btn {
+            padding: 4px 14px;
+            font-size: 12px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 2px;
+        }
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-assign {
+            background: #F59E0B;
+            color: #0A0F1D;
+        }
+        .btn-pickup {
+            background: #0D9488;
+            color: #fff;
+        }
+        .btn-verify {
+            background: #14B8A6;
+            color: #0A0F1D;
+        }
+        .btn-diagnose {
+            background: #8B5CF6;
+            color: #fff;
+        }
+        .btn-part {
+            background: #F472B6;
+            color: #0A0F1D;
+        }
+        .btn-quote {
+            background: #F59E0B;
+            color: #0A0F1D;
+        }
+        .btn-confirm {
+            background: #22C55E;
+            color: #0A0F1D;
+        }
+        .btn-reject {
+            background: #EF4444;
+            color: #fff;
+        }
+        .order-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: 0.3s;
+        }
+        .order-card:hover {
+            border-color: rgba(13, 148, 136, 0.3);
+        }
+        .role-badge {
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(13, 148, 136, 0.15);
+            color: #14B8A6;
+            margin-left: 8px;
+        }
+        @media (max-width: 640px) {
+            .container-custom {
+                padding: 0 16px;
+            }
+            .calc-container {
+                padding: 20px;
+            }
+            .form-card {
+                padding: 28px 20px;
+            }
+            .glass-card {
+                padding: 20px;
+            }
+            .carousel-container {
+                height: 70vh;
+                min-height: 400px;
+            }
+            .order-card {
+                padding: 16px;
+            }
+            .otp-input {
+                width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  RELEASE STRIP                                      -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="releaseStrip" class="release-strip">
+        <span class="inline-block bg-amber-800 text-white text-[10px] font-bold px-3 py-0.5 rounded-full">🚀 New Release</span>
+        <span>RepairMaster App version v3.0 coming soon!</span>
+        <button class="close-strip" onclick="document.getElementById('releaseStrip').style.display='none'">✕</button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  HEADER                                             -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <header class="container-custom py-3 md:py-4 flex items-center justify-between gap-2 md:gap-4 sticky top-0 z-40 bg-[#0A0F1D]/80 backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2 md:gap-4 cursor-pointer select-none" onclick="navigateTo('home')">
+            <div class="rm-logo h-10 w-10 text-lg md:h-12 md:w-12 md:text-2xl flex-shrink-0">RM</div>
+            <div class="flex flex-col justify-center pr-2 md:pr-4">
+                <div class="font-display text-lg sm:text-xl md:text-3xl font-bold tracking-tight leading-none text-white">
+                    Repair<span class="text-teal">Master</span>
+                </div>
+                <div class="text-[8px] md:text-[10px] font-semibold text-teal leading-none tracking-normal mt-0.5">
+                    Direct To Consumer
+                </div>
+                <div class="text-[7px] md:text-[8px] text-white/50 italic leading-none mt-0.5">
+                    powered by <span class="text-teal font-medium not-italic">cm2us.com</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Navigation tabs -->
+        <nav class="desktop-nav flex items-center gap-8 text-sm font-medium" id="mainNav">
+            <a href="#" class="nav-link active" data-page="home" onclick="navigateTo('home')">Home</a>
+            <a href="#" class="nav-link" data-page="request" onclick="navigateTo('request')">Repair Request</a>
+            <a href="#" class="nav-link" data-page="app" onclick="navigateTo('app')">Download</a>
+            <a href="#" class="nav-link" data-page="dashboard" onclick="navigateTo('dashboard')">Dashboard</a>
+            <a href="#" class="nav-link" id="navLogin" data-page="login" onclick="navigateTo('login')">Login</a>
+            <a href="#" class="nav-link" id="navSignup" data-page="signup" onclick="navigateTo('signup')">Sign Up</a>
+            <span id="navUserInfo" class="hidden flex items-center gap-4">
+                <span class="text-sm text-gray-300 font-bold" id="navUserName">User</span>
+                <button onclick="logoutUser()" class="text-sm text-red-400 hover:text-red-300 transition font-bold">Logout</button>
+            </span>
+        </nav>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-menu text-white text-2xl" onclick="toggleMobileMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: HOME                                         -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-home" class="page-section active">
+        <!-- Carousel Slider -->
+        <div class="carousel-container relative">
+            <div class="carousel-slide active" style="background-image: url('repo-image-folder/Slideshow_homepage_1.jpg');">
+                <div class="carousel-content">
+                    <span class="inline-block bg-amber-500/20 text-amber-400 text-xs font-bold px-4 py-1 rounded-full mb-4">🔥 Welcome</span>
+                    <h1>Repair<span class="text-teal">Master</span></h1>
+                    <p class="text-2xl font-bold text-teal">Direct To Consumer</p>
+                    <p>Smart, Fast &amp; Reliable Repairs — powered by cm2us.com</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#calculator-section" class="btn-teal" onclick="document.getElementById('calculator-section').scrollIntoView({behavior:'smooth'})">Get Estimate</a>
+                        <a href="#" class="btn-outline" onclick="navigateTo('request')">Request Repair</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('repo-image-folder/Slideshow_homepage_2.jpg');">
+                <div class="carousel-content">
+                    <span class="inline-block bg-teal-500/20 text-teal-400 text-xs font-bold px-4 py-1 rounded-full mb-4">Doorstep Service</span>
+                    <h1>We Come To You</h1>
+                    <p>Real-time GPS tracking • OTP verified handover • Certified technicians</p>
+                    <a href="#" class="btn-teal" onclick="navigateTo('request')">Schedule Pickup</a>
+                </div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('repo-image-folder/Slideshow_homepage_3.jpg');">
+                <div class="carousel-content">
+                    <span class="inline-block bg-amber-500/20 text-amber-400 text-xs font-bold px-4 py-1 rounded-full mb-4">Genuine Parts</span>
+                    <h1>State-of-the-Art Workshop</h1>
+                    <p>Advanced inventory management • Screens • Batteries • Charging Ports &amp; more</p>
+                    <a href="#calculator-section" class="btn-teal" onclick="document.getElementById('calculator-section').scrollIntoView({behavior:'smooth'})">Explore Parts</a>
+                </div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('repo-image-folder/Slideshow_homepage_4.jpg');">
+                <div class="carousel-content">
+                    <span class="inline-block bg-teal-500/20 text-teal-400 text-xs font-bold px-4 py-1 rounded-full mb-4">Easy Booking</span>
+                    <h1>Seamless Customer App</h1>
+                    <p>🔒 Maintenance Mode active • Privacy Lock enabled</p>
+                    <a href="#" class="btn-teal" onclick="navigateTo('app')">Download App</a>
+                </div>
+            </div>
+            <div class="carousel-slide" style="background-image: url('repo-image-folder/Slideshow_homepage_5.jpg');">
+                <div class="carousel-content">
+                    <span class="inline-block bg-amber-500/20 text-amber-400 text-xs font-bold px-4 py-1 rounded-full mb-4">Expanding Network</span>
+                    <h1>Serving Wardha</h1>
+                    <p class="text-xl font-bold text-amber-400">Nagpur &amp; Amravati — Coming Soon!</p>
+                    <a href="#" class="btn-teal" onclick="navigateTo('request')">Visit Hub</a>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+                <button class="carousel-dot" onclick="goToSlide(1)"></button>
+                <button class="carousel-dot" onclick="goToSlide(2)"></button>
+                <button class="carousel-dot" onclick="goToSlide(3)"></button>
+                <button class="carousel-dot" onclick="goToSlide(4)"></button>
+            </div>
+        </div>
+
+        <!-- City Notice & Maintenance Block -->
+        <div class="container-custom -mt-12 relative z-10">
+            <div class="city-notice mb-4">
+                <i class="fa-solid fa-location-dot"></i>
+                <span><strong>Currently serving Wardha</strong> — Nagpur &amp; Amravati coming soon!</span>
+            </div>
+            <div class="maintenance-banner">
+                <div class="flex-shrink-0 text-2xl text-teal"><i class="fa-solid fa-shield-halved"></i></div>
+                <div>
+                    <strong>🔒 Maintenance Mode Active</strong> — Your data privacy is our priority.
+                    <span class="text-amber-400 font-medium">Check Point at Pick-up:</span>
+                    All devices (except <strong>Dead Phone</strong> &amp; <strong>Blank Screen</strong>) will be placed in <strong>Maintenance Mode</strong> to protect your personal information.
+                    <span class="text-teal-400 text-xs block mt-1"><i class="fa-regular fa-circle-check mr-1"></i> OTP Verified Handover • Privacy Lock Enabled</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warranty badges info -->
+        <div class="container-custom mt-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="glass-card flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center text-2xl text-teal flex-shrink-0">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white">90 Days Warranty</div>
+                        <div class="text-xs text-gray-400">On all parts &amp; labour — guaranteed</div>
+                    </div>
+                </div>
+                <div class="glass-card flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-2xl text-amber-400 flex-shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white">🔒 Maintenance Mode</div>
+                        <div class="text-xs text-gray-400">Pick-up checkpoint active — <span class="text-amber-400">except Dead Phone &amp; Blank Screen</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Offers Feed -->
+        <div class="container-custom py-16">
+            <div class="text-center space-y-3 mb-12">
+                <span class="inline-block bg-amber-500/10 text-amber-400 text-xs px-4 py-1 rounded-full font-bold">
+                    <i class="fa-solid fa-fire mr-1"></i> Hot Deals
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white">Limited Time Offers</h2>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto">Grab these exclusive discounts before they expire.</p>
+            </div>
+            <div id="offersContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center text-gray-400 py-8 col-span-3"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading offers…</div>
+            </div>
+        </div>
+
+        <!-- Dynamic Estimation Calculator Widget -->
+        <div id="calculator-section" class="container-custom py-12">
+            <div class="text-center space-y-3 mb-12">
+                <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold">
+                    <i class="fa-solid fa-calculator mr-1"></i> Smart Repair Calculator
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white">Get Your Accurate Estimate</h2>
+                <p class="text-gray-400 text-sm max-w-2xl mx-auto">Select brand, model, repair type &amp; parts quality – transparent pricing.</p>
+                <p class="text-xs text-amber-400"><i class="fa-solid fa-tag mr-1"></i> All prices include 10% discount</p>
+            </div>
+            <div class="calc-container">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label>1. Select Brand</label>
+                        <select id="brandSelect" onchange="updateModels()">
+                            <option value="">— Select Brand —</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>2. Select Model</label>
+                        <select id="modelSelect" onchange="updateRepairTypes()">
+                            <option value="">— Select Model —</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label>3. Repair Type</label>
+                        <select id="repairTypeSelect" onchange="updatePartsSurvey()">
+                            <option value="">— Select Repair —</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>4. Parts Quality</label>
+                        <select id="qualitySelect" onchange="updatePartsSurvey()">
+                            <option value="premium" data-multiplier="1.0">Premium</option>
+                            <option value="standard" data-multiplier="0.7" selected>Standard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="offer-toggle mt-4">
+                    <input type="checkbox" id="offerToggle" onchange="updatePartsSurvey()">
+                    <label for="offerToggle">
+                        🎉 Claim 50% OFF on Service Fee
+                        <span class="offer-badge">HOT DEAL</span>
+                    </label>
+                </div>
+                <div id="partsSurveyContainer" class="mt-6">
+                    <div class="bg-navyBG/30 border border-grayBorder rounded-xl p-4 text-center text-gray-400/50">
+                        <i class="fa-solid fa-circle-info mr-2"></i> Select a brand, model, and repair type to see parts.
+                    </div>
+                </div>
+                <div class="bg-navyBG/50 border border-grayBorder p-5 rounded-2xl mt-6 space-y-3" id="priceBreakdown">
+                    <div class="price-row"><span>🛠️ Parts Total:</span><span id="partsTotalDisplay" class="font-mono text-white font-bold">₹0.00</span></div>
+                    <div class="price-row"><span>🔧 Service Fee (15%):</span><span id="serviceFeeDisplay" class="font-mono text-amber-400 font-bold">₹0.00</span></div>
+                    <div class="price-row"><span>🩺 Diagnosis Charge:</span><span id="diagnosisChargeDisplay" class="font-mono text-white font-bold">₹250.00</span></div>
+                    <div class="price-row total-row"><span class="text-sm font-bold text-white">💰 Estimated Total:</span><span id="totalPriceDisplay" class="font-display text-2xl font-extrabold text-teal">₹250.00</span></div>
+                </div>
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <button id="bookServiceBtn" onclick="createOrder()" class="flex-1 text-center btn-teal font-extrabold py-3.5 rounded-xl shadow-md hover:scale-[1.02] transition-all">
+                        <i class="fa-regular fa-calendar-check mr-2"></i> Book Service
+                    </button>
+                    <a href="#" class="flex-1 text-center bg-navySurface border border-grayBorder text-gray-400 font-medium py-3.5 rounded-xl hover:border-tealPrimary hover:text-white transition" onclick="navigateTo('dashboard')">
+                        <i class="fa-solid fa-magnifying-glass mr-2"></i> Track Existing Repair
+                    </a>
+                </div>
+                <div class="mt-6 bg-navyBG/30 border border-teal-500/30 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+                    <p class="text-[10px] text-gray-400/80 text-center sm:text-left">
+                        <i class="fa-regular fa-pen-to-square mr-1 text-teal-400"></i>
+                        <strong class="text-teal-400">📋 Price Management</strong>
+                        <br>
+                        <span class="text-gray-400/60">All prices managed via Admin Dashboard.</span>
+                    </p>
+                    <span class="text-[10px] bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full border border-teal-500/20 whitespace-nowrap">
+                        <i class="fa-solid fa-medal mr-1"></i> 90 Days Warranty
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="container-custom py-8 border-t border-white/5 mt-12">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="rm-logo" style="width:36px;height:36px;font-size:18px;">RM</div>
+                    <div>
+                        <span class="text-[8px] font-semibold tracking-[0.15em] text-emerald-400 uppercase">Direct To Consumer</span>
+                        <span class="font-display text-base font-bold tracking-tight block -mt-1">
+                            <span class="text-white">Repair</span><span class="text-teal">Master</span>
+                        </span>
+                        <span class="text-[8px] text-gray-500 italic">powered by cm2us.com</span>
+                    </div>
+                </div>
+                <p class="text-[10px] text-gray-500">&copy; 2026 Direct To Consumer. All Rights Reserved by cm2us.com.</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: REPAIR REQUEST                               -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-request" class="page-section bg-[#121B33] min-h-screen py-16">
+        <div class="container-custom max-w-4xl">
+            <div class="text-center mb-12">
+                <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold">
+                    <i class="fa-regular fa-pen-to-square mr-1"></i> Service Request
+                </span>
+                <h2 class="text-4xl font-bold text-white mt-2">Request a Repair</h2>
+                <p class="text-gray-400 text-sm max-w-xl mx-auto">Fill in the details, upload a photo, and get an instant estimate.</p>
+            </div>
+            <div class="form-card">
+                <form id="repairRequestForm" onsubmit="submitRequest(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label>Full Name</label><input type="text" id="reqName" placeholder="e.g. Akash Chaware" required></div>
+                        <div><label>Phone Number</label><input type="tel" id="reqPhone" placeholder="+91 98765 43210" required></div>
+                    </div>
+                    <div><label>Email Address</label><input type="email" id="reqEmail" placeholder="you@example.com" required></div>
+
+                    <div>
+                        <label>Device Brand</label>
+                        <select id="reqBrand" onchange="updateReqModels()">
+                            <option value="">— Select Brand —</option>
+                        </select>
+                        <div id="reqBrandOther" class="other-input">
+                            <input type="text" placeholder="Enter brand name" id="reqBrandOtherInput">
+                        </div>
+                        <button type="button" class="text-xs text-teal-400 hover:underline mt-1" onclick="toggleOther('reqBrand')">+ Other</button>
+                    </div>
+
+                    <div>
+                        <label>Device Model</label>
+                        <select id="reqModel" onchange="updateReqRepairTypes()">
+                            <option value="">— Select Model —</option>
+                        </select>
+                        <div id="reqModelOther" class="other-input">
+                            <input type="text" placeholder="Enter model name" id="reqModelOtherInput">
+                        </div>
+                        <button type="button" class="text-xs text-teal-400 hover:underline mt-1" onclick="toggleOther('reqModel')">+ Other</button>
+                    </div>
+
+                    <div>
+                        <label>Repair Type</label>
+                        <select id="reqRepairType" onchange="showRequestEstimate()">
+                            <option value="">— Select Repair Type —</option>
+                        </select>
+                        <div id="reqRepairOther" class="other-input">
+                            <input type="text" placeholder="Enter repair type" id="reqRepairOtherInput">
+                        </div>
+                        <button type="button" class="text-xs text-teal-400 hover:underline mt-1" onclick="toggleOther('reqRepairType')">+ Other</button>
+                    </div>
+
+                    <div>
+                        <label>Pickup Address</label>
+                        <input type="text" id="reqAddressLine" placeholder="Street, area, landmark" required>
+                    </div>
+                    <div>
+                        <label>City</label>
+                        <select id="reqCity" required>
+                            <option value="">— Select City —</option>
+                            <option value="Wardha" selected>Wardha (Active)</option>
+                            <option value="Nagpur" disabled>Nagpur (Coming Soon)</option>
+                            <option value="Amravati" disabled>Amravati (Coming Soon)</option>
+                        </select>
+                        <p class="text-xs text-amber-400 mt-1"><i class="fa-solid fa-info-circle mr-1"></i> Currently we only serve Wardha. Nagpur &amp; Amravati will be available soon.</p>
+                    </div>
+
+                    <div>
+                        <label>Upload Photo (optional)</label>
+                        <input type="file" id="reqPhoto" accept="image/*" class="w-full bg-navyBG/30 border border-grayBorder rounded-xl px-4 py-2 text-white text-sm focus:border-teal-400 outline-none">
+                        <p class="text-xs text-gray-400 mt-1">Upload a photo of the device for better assessment.</p>
+                    </div>
+
+                    <div id="requestEstimate" class="mt-4 p-4 bg-navyBG/40 border border-teal-500/30 rounded-xl hidden">
+                        <p class="text-sm font-bold text-white mb-2">📊 Estimate Breakdown</p>
+                        <div class="space-y-1 text-sm mb-3">
+                            <div class="flex justify-between"><span>🛠️ Parts:</span><span id="reqPartsTotal" class="text-teal-400">₹0.00</span></div>
+                            <div class="flex justify-between"><span>🔧 Service Fee (15%):</span><span id="reqServiceFee" class="text-amber-400">₹0.00</span></div>
+                            <div class="flex justify-between"><span>🩺 Diagnosis:</span><span id="reqDiagnosis" class="text-white">₹250.00</span></div>
+                            <div class="flex justify-between border-t border-grayBorder pt-2 font-bold"><span>💰 Total:</span><span id="reqTotal" class="text-teal-400 text-lg">₹250.00</span></div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-teal-500/10 border border-teal-500/20 text-xs text-teal-300">
+                            <p class="font-bold mb-1">📢 After Diagnosis Notice</p>
+                            <p>Later on, after physical device diagnosis at our lab, charges will apply. Our coordinator will add any required spare parts, components, and workmanship/service fees to your final quotation for approval.</p>
+                        </div>
+                    </div>
+
+                    <div><label>Additional Notes</label><textarea rows="3" id="reqNotes" placeholder="Describe the issue in detail..."></textarea></div>
+
+                    <button type="submit" class="btn-teal w-full mt-4"><i class="fa-regular fa-paper-plane mr-2"></i> Submit Request</button>
+                </form>
+                <div id="requestSuccess" class="hidden mt-4 p-4 bg-green-500/20 border border-green-500/30 text-green-400 rounded-xl text-center"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: DOWNLOAD APP                                 -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-app" class="page-section bg-[#0A0F1D] min-h-screen py-16">
+        <div class="container-custom text-center max-w-4xl">
+            <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold mb-4"><i class="fa-brands fa-android mr-1"></i> Download App</span>
+            <h2 class="text-4xl font-bold text-white">RepairMaster Android App</h2>
+            <p class="text-gray-400 text-sm max-w-xl mx-auto mt-2">Version 2.0 — Faster, smarter, and more secure.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="glass-card"><div class="text-5xl text-teal-400 mb-4"><i class="fa-regular fa-clock"></i></div><h3 class="text-lg font-bold text-white">24/7 Support</h3><p class="text-sm text-gray-400">Real-time tracking</p></div>
+                <div class="glass-card"><div class="text-5xl text-teal-400 mb-4"><i class="fa-solid fa-shield-halved"></i></div><h3 class="text-lg font-bold text-white">Privacy Lock</h3><p class="text-sm text-gray-400">Maintenance mode active</p></div>
+                <div class="glass-card"><div class="text-5xl text-teal-400 mb-4"><i class="fa-regular fa-credit-card"></i></div><h3 class="text-lg font-bold text-white">Easy Payments</h3><p class="text-sm text-gray-400">Multiple options</p></div>
+            </div>
+            <div class="mt-10 flex flex-wrap justify-center gap-4">
+                <a href="#" class="btn-teal text-lg px-10 py-4"><i class="fa-brands fa-android mr-2"></i> Download APK</a>
+                <a href="#" class="btn-outline text-lg px-10 py-4"><i class="fa-regular fa-qrcode mr-2"></i> Scan QR Code</a>
+            </div>
+            <p class="text-xs text-gray-500 mt-6">APK size 12 MB • Runs on Android 7.0+</p>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: LOGIN                                        -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-login" class="page-section bg-[#121B33] min-h-screen py-16 flex items-center justify-center">
+        <div class="form-card max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="rm-logo mx-auto" style="width:64px;height:64px;font-size:28px;">RM</div>
+                <h2 class="text-2xl font-bold text-white mt-4">Welcome Back</h2>
+                <p class="text-sm text-gray-400">Login to your RepairMaster account</p>
+            </div>
+
+            <button onclick="signInWithGoogle()" class="btn-google w-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Sign in with Google
+            </button>
+
+            <div class="or-divider">or</div>
+
+            <form id="loginForm" onsubmit="loginUser(event)">
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 text-gray-400">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="text-teal-400 hover:underline">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-teal w-full mt-6">Login</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-6">
+                Don't have an account? <a href="#" onclick="navigateTo('signup')" class="text-teal-400 hover:underline">Sign Up</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: SIGNUP                                       -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-signup" class="page-section bg-[#0A0F1D] min-h-screen py-16 flex items-center justify-center">
+        <div class="form-card max-w-md w-full">
+            <div class="text-center mb-8">
+                <div class="rm-logo mx-auto" style="width:64px;height:64px;font-size:28px;">RM</div>
+                <h2 class="text-2xl font-bold text-white mt-4">Create Account</h2>
+                <p class="text-sm text-gray-400">Join RepairMaster today</p>
+            </div>
+            <form id="signupForm" onsubmit="signupUser(event)">
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" id="signupName" placeholder="Akash Chaware" required>
+                </div>
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="tel" id="signupPhone" placeholder="+91 98765 43210" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+                </div>
+                <button type="submit" class="btn-teal w-full mt-4">Sign Up</button>
+            </form>
+            <p class="text-center text-sm text-gray-400 mt-6">
+                Already have an account? <a href="#" onclick="navigateTo('login')" class="text-teal-400 hover:underline">Login</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  PAGE: DASHBOARD                                    -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section id="page-dashboard" class="page-section bg-[#121B33] min-h-screen py-16">
+        <div class="container-custom max-w-7xl">
+            <div class="flex flex-wrap items-center justify-between mb-10">
+                <div>
+                    <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold">
+                        <i class="fa-solid fa-chart-simple mr-1"></i> Dashboard
+                    </span>
+                    <h2 class="text-4xl font-bold text-white mt-2">Your Repair Requests</h2>
+                    <p class="text-gray-400 text-sm">Track and manage all your repairs in one place.</p>
+                </div>
+                <div id="userRoleBadge" class="hidden">
+                    <span class="role-badge text-sm px-4 py-2 bg-teal-500/20 text-teal-400 rounded-full">
+                        <i class="fa-regular fa-user mr-2"></i> <span id="roleDisplay">Customer</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-navyBG/40 border border-grayBorder rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-teal-400" id="statTotal">0</div>
+                    <div class="text-xs text-gray-400">Total Orders</div>
+                </div>
+                <div class="bg-navyBG/40 border border-grayBorder rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-amber-400" id="statPending">0</div>
+                    <div class="text-xs text-gray-400">Pending</div>
+                </div>
+                <div class="bg-navyBG/40 border border-grayBorder rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="statInProgress">0</div>
+                    <div class="text-xs text-gray-400">In Progress</div>
+                </div>
+                <div class="bg-navyBG/40 border border-grayBorder rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-green-400" id="statCompleted">0</div>
+                    <div class="text-xs text-gray-400">Completed</div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="bg-navyBG/40 border border-grayBorder rounded-xl p-6 mb-8">
+                <h3 class="text-lg font-bold text-white mb-4"><i class="fa-regular fa-user mr-2 text-teal-400"></i> Your Profile</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-gray-400">Full Name</label>
+                        <input type="text" id="profileName" class="w-full bg-navyBG/30 border border-grayBorder rounded-xl px-4 py-2 text-white text-sm focus:border-teal-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Phone Number</label>
+                        <input type="tel" id="profilePhone" class="w-full bg-navyBG/30 border border-grayBorder rounded-xl px-4 py-2 text-white text-sm focus:border-teal-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Address</label>
+                        <input type="text" id="profileAddress" class="w-full bg-navyBG/30 border border-grayBorder rounded-xl px-4 py-2 text-white text-sm focus:border-teal-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">City</label>
+                        <select id="profileCity" class="w-full bg-navyBG/30 border border-grayBorder rounded-xl px-4 py-2 text-white text-sm focus:border-teal-400 outline-none">
+                            <option value="Wardha">Wardha (Active)</option>
+                            <option value="Nagpur" disabled>Nagpur (Coming Soon)</option>
+                            <option value="Amravati" disabled>Amravati (Coming Soon)</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="updateProfile()" class="btn-teal mt-4 text-sm px-6 py-2">Update Profile</button>
+            </div>
+
+            <!-- Orders Container -->
+            <div id="dashboardContent" class="space-y-4">
+                <div class="text-center text-gray-400 py-12">
+                    <i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading your requests...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!--  TOAST NOTIFICATION AREA                            -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <div id="toast" class="fixed bottom-8 right-8 z-50 px-6 py-4 rounded-xl font-bold text-sm shadow-xl max-w-md pointer-events-none opacity-0 translate-y-8 transition-all duration-500"></div>
+
+    <!-- Supabase SDK JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <!-- Static repair pricing data (replaces Supabase parts_pricing table for the calculator) -->
+    <script src="repair-data.js"></script>
+    <!-- Complete Dynamic App Logic script -->
+    <script src="main.js"></script>
+
+</body>
+</html>

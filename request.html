@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Doorstep Repair – RepairMaster</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Theme Styling Config -->
+    <script src="style.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: #0A0F1D;
+            color: #E8EDF5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container-custom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .text-teal {
+            color: #14B8A6;
+        }
+        .btn-teal {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            color: #0A0F1D;
+            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(13, 148, 136, 0.3);
+        }
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(13, 148, 136, 0.45);
+        }
+        .rm-logo {
+            background: linear-gradient(135deg, #0D9488, #14B8A6);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: #0A0F1D;
+            box-shadow: 0 8px 30px rgba(13, 148, 136, 0.3);
+            flex-shrink: 0;
+        }
+        .form-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .form-card input, .form-card select, .form-card textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+            margin-bottom: 16px;
+        }
+        .form-card input:focus, .form-card select:focus, .form-card textarea:focus {
+            border-color: #14B8A6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+        .form-card select option {
+            background: #121B33;
+            color: #fff;
+        }
+        .form-card label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .form-card .other-input {
+            display: none;
+        }
+        .form-card .other-input.visible {
+            display: block;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.65);
+            transition: all 0.3s;
+            text-decoration: none;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: #14B8A6;
+            border-bottom-color: #14B8A6;
+        }
+        .mobile-menu {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+            .desktop-nav {
+                display: none;
+            }
+            .form-card {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-[#0A0F1D]/90 backdrop-blur-md border-b border-white/5 py-2 md:py-3 shadow-lg">
+        <div class="container-custom flex items-center justify-between gap-2 md:gap-4">
+            <div class="flex items-center gap-2 md:gap-4 cursor-pointer select-none" onclick="window.location.href='index.html'">
+                <!-- Logo Icon Container styled to match the mockup perfectly -->
+                <div class="relative flex items-center justify-center p-[2px] rounded-[15px] border border-teal/70 bg-[#0A0F1D] h-11 w-11 md:h-[64px] md:w-[64px] shadow-[0_0_20px_rgba(20,184,166,0.25)] shrink-0 transition-transform duration-300 hover:scale-105">
+                    <img src="assets/images/logo.png" alt="RepairMaster Logo" class="h-full w-full object-cover rounded-[13px]" />
+                </div>
+                
+                <!-- Vertical Divider -->
+                <div class="h-8 md:h-[54px] w-[1.5px] bg-teal/60 shrink-0"></div>
+                
+                <!-- Branding Text Block -->
+                <div class="flex flex-col justify-center relative pr-4 md:pr-8">
+                    <div class="font-display text-sm sm:text-base md:text-lg font-bold tracking-tight leading-none text-white">
+                        Repair<span class="text-teal">Master</span>
+                    </div>
+                    <!-- Horizontal Line -->
+                    <div class="w-full h-[1px] bg-teal/40 my-0.5 md:my-1"></div>
+                    <!-- Tagline -->
+                    <div class="text-[7px] sm:text-[8px] md:text-[10px] font-normal text-gray-400 leading-none tracking-normal">
+                        Direct To Consumer
+                    </div>
+                    <!-- Powered By -->
+                    <div class="text-[6px] sm:text-[7px] md:text-[8px] text-white/50 italic mt-0.5 leading-none">
+                        powered by <span class="text-teal font-medium not-italic">cm2us.com</span>
+                    </div>
+                    
+                    <!-- Sparkles Sparkle on the Right of the text -->
+                    <div class="absolute right-0 bottom-1 flex flex-col items-center gap-1">
+                        <!-- Large Sparkle -->
+                        <svg class="w-2 h-2 md:w-2.5 md:h-2.5 text-teal animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0L14.6 9.4L24 12L14.6 14.6L12 24L9.4 14.6L0 12L9.4 9.4L12 0Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation tabs (Center) -->
+            <nav class="desktop-nav hidden md:flex items-center gap-8 text-sm font-semibold mx-auto" id="mainNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="request.html" class="nav-link active">Repair Request</a>
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+            </nav>
+
+            <!-- Sign In/Sign Up or Profile dropdown (Right) -->
+            <div class="desktop-nav hidden md:flex items-center gap-4">
+                <a href="login.html" class="nav-link text-sm font-semibold" id="navLogin">Login</a>
+                <a href="signup.html" class="btn-teal py-2 px-5 text-xs font-bold rounded-xl shadow-none hover:scale-105 transition" id="navSignup">Sign Up</a>
+                <span id="navUserInfo" class="hidden flex items-center gap-4">
+                    <!-- Loaded dynamically in main.js -->
+                </span>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="md:hidden text-white text-2xl focus:outline-none" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN FORM CONTAINER -->
+    <main class="pt-[96px] md:pt-[116px] pb-16 container-custom flex items-center justify-center flex-1">
+        <div class="form-card max-w-2xl w-full">
+            <div class="text-center mb-8">
+                <span class="inline-block bg-teal-500/10 text-teal-400 text-xs px-4 py-1 rounded-full font-bold mb-2">
+                    <i class="fa-solid fa-truck-ramp-box mr-1"></i> Doorstep Pickup Setup
+                </span>
+                <h2 class="text-3xl font-bold text-white font-display">Schedule a Service Request</h2>
+                <p class="text-sm text-gray-400 mt-1">Book your on-site device diagnostic or secure hub repair pick-up. Active in Wardha.</p>
+            </div>
+
+            <form id="repairRequestForm" onsubmit="submitRequest(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label>Your Name</label>
+                        <input type="text" id="reqName" placeholder="Akash Chaware" required>
+                    </div>
+                    <div>
+                        <label>Mobile Number</label>
+                        <input type="tel" id="reqPhone" placeholder="+91 99999 99999" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="reqEmail" placeholder="akash.chaware.23n@gmail.com" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="m-0">Device Brand</label>
+                            <button type="button" onclick="toggleOther('reqBrand')" class="text-[10px] text-teal hover:underline font-bold">Or enter manual brand</button>
+                        </div>
+                        <select id="reqBrand" onchange="updateReqModels()">
+                            <option value="">— Select Brand —</option>
+                        </select>
+                        <div id="reqBrandOther" class="other-input">
+                            <input type="text" id="reqBrandOtherInput" placeholder="Enter other brand name">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="m-0">Device Model</label>
+                            <button type="button" onclick="toggleOther('reqModel')" class="text-[10px] text-teal hover:underline font-bold">Or enter manual model</button>
+                        </div>
+                        <select id="reqModel" onchange="updateReqRepairTypes()">
+                            <option value="">— Select Model —</option>
+                        </select>
+                        <div id="reqModelOther" class="other-input">
+                            <input type="text" id="reqModelOtherInput" placeholder="Enter other model name">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="m-0">Repair Service Needed</label>
+                        <button type="button" onclick="toggleOther('reqRepairType')" class="text-[10px] text-teal hover:underline font-bold">Or enter manual repair type</button>
+                    </div>
+                    <select id="reqRepairType" onchange="showRequestEstimate()">
+                        <option value="">— Select Repair Type —</option>
+                    </select>
+                    <div id="reqRepairOther" class="other-input">
+                        <input type="text" id="reqRepairOtherInput" placeholder="e.g. Broken back glass panel replacement">
+                    </div>
+                </div>
+
+                <div>
+                    <label>Component Quality Grade</label>
+                    <select id="reqPartsQuality" onchange="showRequestEstimate()">
+                        <option value="standard">Standard Grade Spares (Affordable &amp; Durable)</option>
+                        <option value="premium">Premium Grade Spares (OEM Equivalent Glass/OLED)</option>
+                    </select>
+                </div>
+
+                <!-- Handover Checkpoint Alert -->
+                <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-400">
+                    <p class="font-bold mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Important: Handover Checkpoint Notice</p>
+                    <p>All devices (except <strong>Dead Phone</strong> &amp; <strong>Blank Screen</strong>) will be configured into <strong>Maintenance Mode</strong> at pickup checkpoint. Ensure your screen lock is disabled or backup is verified.</p>
+                </div>
+
+                <!-- Diagnosis Disclaimer Alert -->
+                <div class="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 text-xs text-teal-400">
+                    <p class="font-bold mb-1"><i class="fa-solid fa-circle-info mr-1"></i> After Diagnosis Notice &amp; Rejection Rule</p>
+                    <p class="mb-2">Later on, after physical device diagnosis at our lab, charges will apply. Our coordinator will add any required spare parts, components, and workmanship/service fees to your final quotation for your approval.</p>
+                    <p class="text-amber-400 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Quote Rejection Rule: If you choose to decline/reject the final repair quote after our lab diagnosis, a minimum workmanship service fee of <strong>₹100</strong> and a lab diagnosis fee of <strong>₹250</strong> (Total <strong>₹350</strong>) will apply to cover pickup logistics, testing, and device reassembly returns.</p>
+                </div>
+
+                <!-- Diagnostic Estimates panel -->
+                <div id="requestEstimate" class="hidden p-4 rounded-xl bg-teal-500/5 border border-teal-500/10 space-y-2 text-xs">
+                    <p class="font-bold text-white uppercase tracking-wider mb-2"><i class="fa-solid fa-receipt mr-1"></i> Live Estimator Summary</p>
+                    <div class="flex justify-between"><span>🛠️ Parts (including 10% discount):</span><span id="reqPartsTotal" class="text-teal-400">₹0.00</span></div>
+                    <div class="flex justify-between"><span>🔧 Workmanship/Service Fee:</span><span id="reqServiceFee" class="text-amber-400 font-bold">₹0.00</span></div>
+                    <div class="flex justify-between"><span>🩺 Secure Lab Diagnosis:</span><span id="reqDiagnosis" class="text-white">₹250.00</span></div>
+                    <div class="flex justify-between border-t border-grayBorder/40 pt-2 font-bold text-sm text-teal"><span>💰 Estimated Grand Total:</span><span id="reqTotal">₹250.00</span></div>
+                </div>
+
+                <div>
+                    <label>Detailed Issue Description / Symptoms</label>
+                    <textarea id="reqNotes" rows="3" placeholder="Explain symptoms like touch dead, charging drops, lines on screen, liquid entry..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label>Doorstep Location Address</label>
+                        <input type="text" id="reqAddressLine" placeholder="Flat, Street, Wardha area" required>
+                    </div>
+                    <div>
+                        <label>City Hub</label>
+                        <select id="reqCity" required>
+                            <option value="Wardha">Wardha Hub (Fully active)</option>
+                            <option value="Nagpur" disabled>Nagpur Hub (Coming soon)</option>
+                            <option value="Amravati" disabled>Amravati Hub (Coming soon)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Upload Device Condition Photo (Optional)</label>
+                    <input type="file" id="reqPhoto" accept="image/*" class="text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-teal-500/10 file:text-teal-400 hover:file:bg-teal-500/20">
+                </div>
+
+                <button type="submit" class="btn-teal w-full mt-4"><i class="fa-regular fa-paper-plane mr-2"></i> Submit Repair Request</button>
+            </form>
+            <div id="requestSuccess" class="hidden mt-4 p-4 bg-green-500/20 border border-green-500/30 text-green-400 rounded-xl text-center font-bold text-sm"></div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 bg-[#080D1A] py-12 pb-24 md:pb-12 mt-20 text-sm text-grayText">
+        <div class="container-custom grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="rm-logo w-10 h-10 text-lg rounded-xl"></div>
+                    <span class="font-bold text-white text-lg font-display">RepairMaster</span>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed">Premium Doorstep &amp; Laboratory Repairs for Nagpur, Wardha &amp; Amravati regions. Fast, reliable, and secure.</p>
+                <p class="text-[10px] text-gray-600">© 2026 RepairMaster. All rights reserved.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Service Locations</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><span class="text-teal"><i class="fa-solid fa-location-dot mr-1"></i> Wardha Hub</span> (Fully Active)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Nagpur Hub (Coming soon)</li>
+                    <li class="text-gray-600"><i class="fa-solid fa-location-dot mr-1"></i> Amravati Hub (Coming soon)</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Quick Links</h4>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="request.html" class="hover:text-teal transition"><i class="fa-regular fa-file-lines mr-1.5 text-teal"></i> Submit Repair Request</a></li>
+                    <li><a href="dashboard.html" class="hover:text-teal transition"><i class="fa-solid fa-chart-line mr-1.5 text-teal"></i> Customer Portal Dashboard</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 uppercase text-xs tracking-wider">Platform Details</h4>
+                <p class="text-xs text-gray-500 leading-relaxed mb-3">RepairMaster is a next-gen Direct-To-Consumer smartphone service network. Engineered using Supabase Real-time PostgreSQL, Tailwind CSS, and Kotlin, our mission is to deliver transparent, fast, and high-density doorstep repairs across Maharashtra.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Back to Top Button (Mobile) -->
+    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-24 right-6 z-40 bg-teal-600 hover:bg-teal-500 text-slate-950 p-3 rounded-full shadow-2xl transition duration-300 transform scale-0 focus:outline-none">
+        <i class="fa-solid fa-arrow-up text-base"></i>
+    </button>
+
+    <!-- Mobile App Bottom Navigation Bar -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-[#070b14]/95 border-t border-white/10 backdrop-blur-lg flex justify-around py-3 z-50 text-center font-display shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-house text-base mb-1"></i>
+            <span>Home</span>
+        </a>
+        <a href="request.html" class="flex flex-col items-center text-[10px] text-teal">
+            <i class="fa-solid fa-screwdriver-wrench text-base mb-1"></i>
+            <span>Request</span>
+        </a>
+        <a href="dashboard.html" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-chart-simple text-base mb-1"></i>
+            <span>Hub</span>
+        </a>
+        <a href="index.html#marketplace-section" class="flex flex-col items-center text-[10px] text-gray-400 hover:text-teal transition">
+            <i class="fa-solid fa-store text-base mb-1"></i>
+            <span>Store</span>
+        </a>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="fixed bottom-20 md:bottom-8 right-8 z-50 px-6 py-4 rounded-xl font-bold text-sm shadow-xl max-w-md pointer-events-none opacity-0 translate-y-8 transition-all duration-500"></div>
+
+    <!-- Supabase Client & Multi-Page script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <!-- Static repair pricing data (replaces Supabase parts_pricing table for the calculator) -->
+    <script src="repair-data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
